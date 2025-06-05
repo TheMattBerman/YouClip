@@ -6,6 +6,7 @@ Simple YouClip GUI - Simplified version to avoid crashes
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import threading
+import subprocess
 import os
 import sys
 from pathlib import Path
@@ -60,8 +61,19 @@ class SimpleYouClipGUI:
         # URL Section
         ttk.Label(main_frame, text="YouTube URL:").grid(row=1, column=0, sticky="w", pady=5)
         self.url_var = tk.StringVar()
-        url_entry = ttk.Entry(main_frame, textvariable=self.url_var, width=60)
-        url_entry.grid(row=1, column=1, columnspan=2, sticky="ew", pady=5, padx=(10, 0))
+        self.url_entry = ttk.Entry(main_frame, textvariable=self.url_var, width=60, state="normal")
+        self.url_entry.grid(row=1, column=1, columnspan=2, sticky="ew", pady=5, padx=(10, 0))
+        
+        # Add placeholder text
+        self.url_entry.insert(0, "https://www.youtube.com/watch?v=...")
+        self.url_entry.bind('<FocusIn>', self._on_url_focus_in)
+        self.url_entry.bind('<Button-1>', self._on_url_click)
+        
+        # Set focus to URL entry for immediate typing
+        self.url_entry.focus_set()
+        
+        # Bind key event to test input
+        self.url_entry.bind('<KeyRelease>', self._on_url_key_release)
         
         # Preview button
         preview_btn = ttk.Button(main_frame, text="Preview Video Info", command=self.preview_video)
@@ -130,6 +142,26 @@ class SimpleYouClipGUI:
         
         self.log("YouClip Simple GUI started successfully!")
         
+    def _on_url_focus_in(self, event):
+        """Clear placeholder text when URL field gets focus"""
+        current_text = self.url_entry.get()
+        if current_text == "https://www.youtube.com/watch?v=...":
+            self.url_entry.delete(0, tk.END)
+    
+    def _on_url_click(self, event):
+        """Clear placeholder text when URL field is clicked"""
+        current_text = self.url_entry.get()
+        if current_text == "https://www.youtube.com/watch?v=...":
+            self.url_entry.delete(0, tk.END)
+    
+    def _on_url_key_release(self, event):
+        """Debug: Log when keys are typed in URL field"""
+        current_text = self.url_entry.get()
+        if current_text and current_text != "https://www.youtube.com/watch?v=...":
+            # Only log for the first few characters to avoid spam
+            if len(current_text) <= 5:
+                self.log(f"Debug: URL field input detected: '{current_text}'")
+    
     def log(self, message):
         """Add message to status log"""
         self.status_text.insert(tk.END, f"{message}\n")
@@ -279,6 +311,8 @@ class SimpleYouClipGUI:
     def clear_all(self):
         """Clear all fields"""
         self.url_var.set("")
+        self.url_entry.delete(0, tk.END)
+        self.url_entry.insert(0, "https://www.youtube.com/watch?v=...")
         self.start_var.set("")
         self.end_var.set("")
         self.output_var.set("")
