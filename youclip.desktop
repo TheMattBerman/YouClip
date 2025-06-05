@@ -1,0 +1,19 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=YouClip
+Comment=Download specific clips from YouTube videos
+Exec=python3 /path/to/YouClip/launch_gui.py
+Icon=/path/to/YouClip/icon.png
+Terminal=false
+Categories=AudioVideo;Video;Network;
+Keywords=youtube;video;download;clip;extract;ffmpeg;
+StartupNotify=true
+MimeType=text/uri-list;
+
+# Installation instructions:
+# 1. Replace /path/to/YouClip/ with the actual path to your YouClip directory
+# 2. Copy this file to ~/.local/share/applications/ for user installation
+#    or to /usr/share/applications/ for system-wide installation
+# 3. Run: desktop-file-install youclip.desktop
+# 4. Update desktop database: update-desktop-database 
