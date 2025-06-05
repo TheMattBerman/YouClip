@@ -22,40 +22,115 @@ from utils.validators import Validators
 
 
 class WinampStyle:
-    """Winamp-inspired color scheme and styling constants"""
-    # Colors - Classic Winamp palette
-    BG_PRIMARY = "#2c2c2c"      # Dark gray background
-    BG_SECONDARY = "#1a1a1a"    # Darker panels
-    BG_ACCENT = "#3a3a3a"       # Raised elements
-    BG_SUNKEN = "#0f0f0f"       # Sunken elements
+    """YouClip-inspired color scheme and styling constants - Ultra Authentic Early 2000s Style"""
     
-    # Winamp classic green LCD colors
-    TEXT_PRIMARY = "#00ff00"     # Bright green
-    TEXT_SECONDARY = "#00aa00"   # Dimmer green
-    TEXT_LCD = "#00ff41"         # LCD green
-    TEXT_SUCCESS = "#00ff00"     # Success green
-    TEXT_ERROR = "#ff0000"       # Error red
-    TEXT_WARNING = "#ffff00"     # Warning yellow
+    # Core Winamp Colors - Authentic Classic Palette from the original
+    BG_PRIMARY = "#3c3c3c"          # Dark Winamp background
+    BG_SECONDARY = "#2a2a2a"        # Darker panel background
+    BG_ACCENT = "#4a4a4a"           # Light raised elements
+    BG_SUNKEN = "#1a1a1a"           # Deep sunken elements
+    BG_DARK = "#000000"             # Pure black for deep areas
     
-    # Accent colors
-    ACCENT_COLOR = "#ff6600"     # Winamp orange
-    ACCENT_HOVER = "#ff8833"     # Lighter orange
-    BUTTON_ACTIVE = "#4a90e2"    # Active button blue
+    # Classic Winamp LCD/Display Colors - Authentic bright green
+    BG_LCD = "#000000"              # Black LCD background
+    TEXT_LCD = "#00ff41"            # Classic bright Winamp green
+    TEXT_LCD_DIM = "#00cc33"        # Dimmed LCD text
+    TEXT_LCD_GLOW = "#66ff66"       # LCD glow effect
     
-    # Border colors - More Winamp-like metallic theme
-    BORDER_LIGHT = "#888888"     # Light border (metallic)
-    BORDER_DARK = "#000000"      # Dark border
-    BORDER_ACCENT = "#aaaaaa"    # Accent border (chrome-like)
-    BORDER_CHROME_LIGHT = "#cccccc"  # Chrome highlight
-    BORDER_CHROME_DARK = "#333333"   # Chrome shadow
+    # Metal/Chrome gradient colors for authentic 3D effect - Winamp style
+    CHROME_LIGHT = "#6a6a6a"        # Brightest highlight
+    CHROME_MID_LIGHT = "#5a5a5a"    # Mid highlight
+    CHROME_MID = "#4a4a4a"          # Base chrome
+    CHROME_MID_DARK = "#3a3a3a"     # Mid shadow
+    CHROME_DARK = "#2a2a2a"         # Deep shadow
+    CHROME_DARKEST = "#1a1a1a"      # Darkest shadow
     
-    # Fonts - More retro/digital style with better readability
-    FONT_MAIN = ("Courier New", 12)
-    FONT_HEADING = ("Arial", 14, "bold")
-    FONT_SMALL = ("Courier New", 10)
-    FONT_LCD = ("Courier New", 12, "bold")  # For LCD-style displays
-    FONT_TITLE = ("Arial", 20, "bold")  # For main title
-    FONT_BUTTON = ("Arial", 11, "bold")  # For buttons
+    # Classic button colors - Winamp style
+    BUTTON_FACE = "#4a4a4a"         # Button face
+    BUTTON_LIGHT = "#6a6a6a"        # Button highlight
+    BUTTON_SHADOW = "#2a2a2a"       # Button shadow
+    BUTTON_DARK_SHADOW = "#1a1a1a"  # Button dark shadow
+    BUTTON_PRESSED = "#3a3a3a"      # Pressed button
+    
+    # YouClip Orange accent - the classic Winamp color
+    ACCENT_ORANGE = "#ff6600"       # Classic Winamp orange
+    ACCENT_ORANGE_LIGHT = "#ff8833" # Light orange
+    ACCENT_ORANGE_DARK = "#cc4400"  # Dark orange
+    
+    # Special Winamp gradient colors for authentic look
+    WINAMP_BLUE = "#2d4f8e"         # Classic Winamp blue
+    WINAMP_BLUE_LIGHT = "#4a6bb5"   # Light Winamp blue
+    WINAMP_BLUE_DARK = "#1a3366"    # Dark Winamp blue
+    
+    # Text colors for different contexts - Winamp style
+    TEXT_PRIMARY = "#ffffff"        # White text on dark backgrounds
+    TEXT_SECONDARY = "#cccccc"      # Light gray text
+    TEXT_WHITE = "#ffffff"          # White text
+    TEXT_ERROR = "#ff4444"          # Bright red for errors
+    TEXT_SUCCESS = "#44ff44"        # Bright green for success
+    TEXT_WARNING = "#ffaa00"        # Bright orange for warnings
+    
+    # Window frame colors for authentic 3D effect - Winamp style
+    FRAME_LIGHT = "#6a6a6a"         # Top/left highlight
+    FRAME_SHADOW = "#2a2a2a"        # Bottom/right shadow
+    FRAME_DARK_SHADOW = "#1a1a1a"   # Deep shadow
+    
+    # Fonts - Authentic early 2000s style with larger, more readable sizes
+    FONT_SYSTEM = ("MS Sans Serif", 10)          # Classic Windows system font
+    FONT_MAIN = ("MS Sans Serif", 10)            # Main interface font
+    FONT_HEADING = ("MS Sans Serif", 11, "bold") # Section headings
+    FONT_LCD = ("Fixedsys", 13, "bold")         # LCD displays (fixed-width)
+    FONT_TITLE = ("MS Sans Serif", 14, "bold")  # Main title
+    FONT_BUTTON = ("MS Sans Serif", 10)          # Button text
+    FONT_SMALL = ("MS Sans Serif", 9)           # Small text
+    
+    # Spacing and sizing - compact like original Winamp
+    PADDING_SMALL = 2
+    PADDING_MEDIUM = 4
+    PADDING_LARGE = 8
+    BORDER_WIDTH = 1
+    BUTTON_HEIGHT = 23              # Classic Windows button height
+    
+    @staticmethod
+    def create_3d_border_style(widget, style="raised"):
+        """Create authentic 3D border effect like classic Windows/YouClip"""
+        if style == "raised":
+            widget.configure(
+                highlightbackground=WinampStyle.FRAME_LIGHT,
+                highlightcolor=WinampStyle.FRAME_LIGHT,
+                highlightthickness=1,
+                relief="raised",
+                bd=2
+            )
+        elif style == "sunken":
+            widget.configure(
+                highlightbackground=WinampStyle.FRAME_SHADOW,
+                highlightcolor=WinampStyle.FRAME_SHADOW,
+                highlightthickness=1,
+                relief="sunken",
+                bd=2
+            )
+        elif style == "chrome":
+            widget.configure(
+                highlightbackground=WinampStyle.CHROME_LIGHT,
+                highlightcolor=WinampStyle.CHROME_LIGHT,
+                highlightthickness=1,
+                relief="raised",
+                bd=3
+            )
+    
+    @staticmethod
+    def create_lcd_display_style(widget):
+        """Create authentic LCD display styling"""
+        widget.configure(
+            bg=WinampStyle.BG_LCD,
+            fg=WinampStyle.TEXT_LCD,
+            font=WinampStyle.FONT_LCD,
+            relief="sunken",
+            bd=2,
+            highlightbackground=WinampStyle.CHROME_DARK,
+            highlightthickness=1
+        )
 
 
 class YouTubeClipGUI:
@@ -67,592 +142,708 @@ class YouTubeClipGUI:
         self.current_video_info = None
         self.download_thread = None
         
+        # Add scrolling text variables for authentic YouClip feel
+        self.title_text = ""
+        self.title_scroll_pos = 0
+        self.title_scroll_active = False
+        
         self.setup_window()
         self.create_widgets()
         self.setup_styles()
         
-    def setup_window(self):
-        """Configure the main window - Winamp style"""
-        self.root.title("YouClip v2.1 - [Stopped] - Winamp")
-        self.root.geometry("850x750")
-        self.root.minsize(750, 650)
+        # Setup keyboard shortcuts after widgets are created
+        self.setup_keyboard_shortcuts()
         
-        # Configure window background with Winamp colors
+        # Start the title scrolling animation
+        self.animate_title_scroll()
+        
+    def setup_window(self):
+        """Configure the main window - Authentic YouClip style"""
+        self.root.title("YouClip v2.1 - [Stopped] - YouClip")
+        self.root.geometry("680x580")  # More compact like original YouClip
+        self.root.minsize(650, 550)
+        self.root.resizable(True, True)
+        
+        # Configure window background with authentic YouClip colors
         self.root.configure(bg=WinampStyle.BG_PRIMARY)
         
-        # Try to make the window look more retro
+        # Try to set classic Windows styling
         try:
-            # Remove window decorations for more authentic look (optional)
-            # self.root.overrideredirect(True)  # Uncomment for borderless
-            pass
+            # Make it look like a classic Windows application
+            self.root.attributes('-toolwindow', False)
         except:
             pass
         
         # Center window on screen
         self.root.update_idletasks()
-        x = (self.root.winfo_screenwidth() // 2) - (850 // 2)
-        y = (self.root.winfo_screenheight() // 2) - (750 // 2)
-        self.root.geometry(f"850x750+{x}+{y}")
+        x = (self.root.winfo_screenwidth() // 2) - (680 // 2)
+        y = (self.root.winfo_screenheight() // 2) - (580 // 2)
+        self.root.geometry(f"680x580+{x}+{y}")
         
-        # Set window icon (if available)
-        try:
-            # You can add a Winamp-style icon file here
-            pass
-        except:
-            pass
-    
-    def create_widgets(self):
-        """Create and layout all GUI widgets - Winamp style"""
-        # Main container with Winamp-style border effect
-        main_frame = tk.Frame(
-            self.root, 
-            bg=WinampStyle.BG_ACCENT,
-            relief="raised",
-            bd=2
-        )
-        main_frame.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
-        
-        # Configure grid weights
+        # Configure grid weights for responsive design
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
-        main_frame.columnconfigure(1, weight=1)
-        
-        # Main title bar - Winamp style with metallic appearance
-        title_bar = tk.Frame(
-            main_frame, 
-            bg=WinampStyle.BORDER_ACCENT, 
-            relief="raised", 
-            bd=4,
-            highlightbackground=WinampStyle.BORDER_CHROME_LIGHT,
-            highlightcolor=WinampStyle.BORDER_CHROME_DARK,
-            highlightthickness=1
-        )
-        title_bar.grid(row=0, column=0, columnspan=3, sticky="ew", pady=(10, 0), padx=10)
-        
-        # Title - Winamp style with ASCII art feel
-        title_label = tk.Label(
-            title_bar, 
-            text="░░░ YouClip v2.1 ░░░", 
-            font=WinampStyle.FONT_TITLE,
-            foreground=WinampStyle.ACCENT_COLOR,
-            background=WinampStyle.BORDER_ACCENT
-        )
-        title_label.grid(row=0, column=0, pady=8)
-        
-        # Subtitle with retro feel
-        subtitle_label = tk.Label(
-            main_frame,
-            text="♫ ♪ ♫ YouTube Video Clip Downloader ♫ ♪ ♫",
-            font=WinampStyle.FONT_MAIN,
-            foreground=WinampStyle.TEXT_LCD,
-            background=WinampStyle.BG_ACCENT
-        )
-        subtitle_label.grid(row=1, column=0, columnspan=3, pady=(8, 15), padx=10, sticky="ew")
-        
-        # URL Section
-        self.create_url_section(main_frame, row=2)
-        
-        # Video Info Section
-        self.create_video_info_section(main_frame, row=3)
-        
-        # Time Range Section
-        self.create_time_section(main_frame, row=4)
-        
-        # Output Options Section
-        self.create_output_section(main_frame, row=5)
-        
-        # Action Buttons
-        self.create_action_buttons(main_frame, row=6)
-        
-        # Progress Section
-        self.create_progress_section(main_frame, row=7)
-        
-        # Status/Log Section
-        self.create_status_section(main_frame, row=8)
     
-    def create_url_section(self, parent, row):
-        """Create URL input section - Winamp style"""
-        # Section frame with Winamp styling
-        url_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="groove", bd=2)
-        url_frame.grid(row=row, column=0, columnspan=3, sticky="ew", pady=(5, 10), padx=10)
-        url_frame.columnconfigure(1, weight=1)
+    def setup_keyboard_shortcuts(self):
+        """Setup classic YouClip-style keyboard shortcuts"""
+        # Classic YouClip shortcuts
+        self.root.bind('<Control-l>', lambda e: self.url_entry.focus_set() if hasattr(self, 'url_entry') else None)  # Focus URL
+        self.root.bind('<Control-Return>', lambda e: self.start_download())  # Download
+        self.root.bind('<Escape>', lambda e: self.cancel_download())         # Stop
+        self.root.bind('<Control-c>', lambda e: self.clear_all())           # Clear
+        self.root.bind('<F1>', lambda e: self.show_about())                 # About
         
-        # Section title
-        title_label = tk.Label(
-            url_frame, 
-            text="=== YOUTUBE VIDEO URL ===", 
-            font=WinampStyle.FONT_HEADING,
-            fg=WinampStyle.ACCENT_COLOR,
-            bg=WinampStyle.BG_SECONDARY
+        # Make Enter in URL field trigger preview
+        if hasattr(self, 'url_entry') and hasattr(self, 'preview_btn'):
+            self.url_entry.bind('<Return>', lambda e: self.preview_video() if self.preview_btn['state'] == 'normal' else None)
+    
+    def create_widgets(self):
+        """Create and layout all GUI widgets - Authentic YouClip style"""
+        # Main container with authentic Windows 95/98 3D border
+        main_frame = tk.Frame(
+            self.root, 
+            bg=WinampStyle.BG_PRIMARY,
+            relief="flat",
+            bd=0
         )
-        title_label.grid(row=0, column=0, columnspan=3, pady=(8, 5))
+        main_frame.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+        main_frame.columnconfigure(0, weight=1)
         
-        # URL entry
-        tk.Label(
-            url_frame, 
-            text="URL:", 
+        # Create authentic YouClip-style title bar
+        self.create_title_bar(main_frame, row=0)
+        
+        # Create main LCD display area (like YouClip's main display)
+        self.create_main_display(main_frame, row=1)
+        
+        # Create control panels section
+        self.create_control_panels(main_frame, row=2)
+        
+        # Create bottom status/log area
+        self.create_bottom_panel(main_frame, row=3)
+    
+    def create_title_bar(self, parent, row):
+        """Create authentic YouClip-style title bar"""
+        title_frame = tk.Frame(
+            parent,
+            bg=WinampStyle.BG_PRIMARY,
+            relief="flat",
+            bd=0
+        )
+        title_frame.grid(row=row, column=0, sticky="ew", pady=(0, 2))
+        title_frame.columnconfigure(1, weight=1)
+        
+        # Left side - YouClip logo area with Winamp blue gradient
+        logo_frame = tk.Frame(
+            title_frame,
+            bg=WinampStyle.WINAMP_BLUE,
+            relief="raised",
+            bd=1
+        )
+        logo_frame.grid(row=0, column=0, sticky="w", padx=(2, 4))
+        
+        # YouClip logo text
+        logo_label = tk.Label(
+            logo_frame,
+            text="YOUCLIP",
+            font=("Arial", 9, "bold"),
+            fg=WinampStyle.TEXT_WHITE,
+            bg=WinampStyle.WINAMP_BLUE
+        )
+        logo_label.pack(padx=4, pady=1)
+        
+        # Center - main title
+        title_label = tk.Label(
+            title_frame,
+            text="YouClip v2.1 - YouTube Video Clip Downloader",
             font=WinampStyle.FONT_MAIN,
             fg=WinampStyle.TEXT_PRIMARY,
-            bg=WinampStyle.BG_SECONDARY
-        ).grid(row=1, column=0, sticky="w", padx=(15, 10), pady=8)
+            bg=WinampStyle.BG_PRIMARY
+        )
+        title_label.grid(row=0, column=1, sticky="w", padx=4)
         
+        # Right side - minimize/close buttons (aesthetic only)
+        buttons_frame = tk.Frame(
+            title_frame,
+            bg=WinampStyle.BG_PRIMARY,
+            relief="flat"
+        )
+        buttons_frame.grid(row=0, column=2, sticky="e", padx=2)
+        
+        # Minimize button
+        min_btn = tk.Button(
+            buttons_frame,
+            text="_",
+            font=("Arial", 6, "bold"),
+            width=2,
+            height=1,
+            bg=WinampStyle.BUTTON_FACE,
+            fg=WinampStyle.TEXT_PRIMARY,
+            relief="raised",
+            bd=1,
+            command=self.minimize_window
+        )
+        min_btn.pack(side="left", padx=1)
+        
+        # Close button
+        close_btn = tk.Button(
+            buttons_frame,
+            text="X",
+            font=("Arial", 6, "bold"),
+            width=2,
+            height=1,
+            bg=WinampStyle.BUTTON_FACE,
+            fg=WinampStyle.TEXT_PRIMARY,
+            relief="raised",
+            bd=1,
+            command=self.root.quit
+        )
+        close_btn.pack(side="left")
+    
+    def create_main_display(self, parent, row):
+        """Create main LCD display area like YouClip's main window"""
+        display_frame = tk.Frame(
+            parent,
+            bg=WinampStyle.BG_SECONDARY,
+            relief="sunken",
+            bd=2
+        )
+        display_frame.grid(row=row, column=0, sticky="ew", pady=2, padx=2)
+        display_frame.columnconfigure(0, weight=1)
+        
+        # Main LCD display with enhanced Winamp styling
+        lcd_frame = tk.Frame(
+            display_frame,
+            bg=WinampStyle.BG_LCD,
+            relief="sunken",
+            bd=2
+        )
+        lcd_frame.grid(row=0, column=0, sticky="ew", padx=4, pady=4)
+        lcd_frame.columnconfigure(0, weight=1)
+        
+        # Create URL input section within LCD
+        self.create_url_section(lcd_frame, row=0)
+        
+        # Create video info display
+        self.create_video_info_section(lcd_frame, row=1)
+    
+    def create_control_panels(self, parent, row):
+        """Create control panels section"""
+        controls_frame = tk.Frame(
+            parent,
+            bg=WinampStyle.BG_PRIMARY,
+            relief="flat"
+        )
+        controls_frame.grid(row=row, column=0, sticky="ew", pady=2, padx=2)
+        controls_frame.columnconfigure(0, weight=1)
+        controls_frame.columnconfigure(1, weight=1)
+        
+        # Left panel - Time controls
+        left_panel = tk.Frame(
+            controls_frame,
+            bg=WinampStyle.BG_SECONDARY,
+            relief="sunken",
+            bd=2
+        )
+        left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 1))
+        
+        self.create_time_section(left_panel, row=0)
+        
+        # Right panel - Output controls
+        right_panel = tk.Frame(
+            controls_frame,
+            bg=WinampStyle.BG_SECONDARY,
+            relief="sunken",
+            bd=2
+        )
+        right_panel.grid(row=0, column=1, sticky="nsew", padx=(1, 0))
+        
+        self.create_output_section(right_panel, row=0)
+        
+        # Action buttons below panels
+        self.create_action_buttons(controls_frame, row=1)
+        
+        # Progress section
+        self.create_progress_section(controls_frame, row=2)
+    
+    def create_bottom_panel(self, parent, row):
+        """Create bottom status panel"""
+        self.create_status_section(parent, row)
+    
+    def minimize_window(self):
+        """Minimize window"""
+        self.root.iconify()
+    
+    def create_url_section(self, parent, row):
+        """Create URL input section - Authentic LCD style"""
+        # URL input area within LCD display
+        url_frame = tk.Frame(
+            parent,
+            bg=WinampStyle.BG_LCD,
+            relief="flat"
+        )
+        url_frame.grid(row=row, column=0, sticky="ew", pady=2, padx=4)
+        url_frame.columnconfigure(1, weight=1)
+        
+        # URL label in LCD style
+        url_label = tk.Label(
+            url_frame,
+            text="URL:",
+            font=WinampStyle.FONT_LCD,
+            fg=WinampStyle.TEXT_LCD,
+            bg=WinampStyle.BG_LCD
+        )
+        url_label.grid(row=0, column=0, sticky="w", padx=(2, 4), pady=2)
+        
+        # URL entry with authentic LCD styling
         self.url_var = tk.StringVar()
         self.url_entry = tk.Entry(
-            url_frame, 
-            textvariable=self.url_var, 
-            font=WinampStyle.FONT_MAIN,
+            url_frame,
+            textvariable=self.url_var,
+            font=WinampStyle.FONT_LCD,
             bg=WinampStyle.BG_SUNKEN,
             fg=WinampStyle.TEXT_LCD,
             relief="sunken",
-            bd=2,
-            insertbackground=WinampStyle.TEXT_LCD
+            bd=1,
+            insertbackground=WinampStyle.TEXT_LCD,
+            highlightthickness=0
         )
-        self.url_entry.grid(row=1, column=1, sticky="ew", padx=(0, 10), pady=8)
+        self.url_entry.grid(row=0, column=1, sticky="ew", padx=(0, 2), pady=2)
         self.url_entry.bind('<KeyRelease>', self.on_url_change)
         
-        # Validate and preview buttons
-        button_frame = tk.Frame(url_frame, bg=WinampStyle.BG_SECONDARY)
-        button_frame.grid(row=1, column=2, sticky="e", padx=(0, 10))
-        
-        self.validate_btn = tk.Button(
-            button_frame, 
-            text="VALIDATE", 
-            command=self.validate_url,
-            width=10,
-            font=WinampStyle.FONT_BUTTON,
-            bg=WinampStyle.BG_ACCENT,
-            fg=WinampStyle.TEXT_PRIMARY,
-            relief="raised",
-            bd=2,
-            activebackground=WinampStyle.ACCENT_HOVER,
-            activeforeground=WinampStyle.TEXT_LCD
-        )
-        self.validate_btn.grid(row=0, column=0, padx=(0, 5))
-        
+        # Preview button (compact, like YouClip buttons) - Enhanced
         self.preview_btn = tk.Button(
-            button_frame, 
-            text="PREVIEW", 
+            url_frame,
+            text="►",
             command=self.preview_video,
-            width=10,
-            font=WinampStyle.FONT_BUTTON,
-            bg=WinampStyle.BG_ACCENT,
+            width=3,
+            height=1,
+            font=("Arial", 10, "bold"),
+            bg=WinampStyle.BUTTON_FACE,
             fg=WinampStyle.TEXT_PRIMARY,
             relief="raised",
             bd=2,
             state="disabled",
-            activebackground=WinampStyle.ACCENT_HOVER,
-            activeforeground=WinampStyle.TEXT_LCD
+            activebackground=WinampStyle.ACCENT_ORANGE,
+            activeforeground=WinampStyle.TEXT_WHITE,
+            cursor="hand2"
         )
-        self.preview_btn.grid(row=0, column=1)
+        self.preview_btn.grid(row=0, column=2, sticky="e", padx=2)
         
-        # URL status with LCD-style display
+        # Add hover effects for preview button
+        def on_preview_enter(e):
+            if self.preview_btn['state'] == 'normal':
+                self.preview_btn.configure(bg=WinampStyle.ACCENT_ORANGE)
+        
+        def on_preview_leave(e):
+            if self.preview_btn['state'] == 'normal':
+                self.preview_btn.configure(bg=WinampStyle.BUTTON_FACE)
+        
+        self.preview_btn.bind("<Enter>", on_preview_enter)
+        self.preview_btn.bind("<Leave>", on_preview_leave)
+        
+        # URL status display in enhanced LCD style
         self.url_status_var = tk.StringVar()
         self.url_status_label = tk.Label(
-            url_frame, 
+            url_frame,
             textvariable=self.url_status_var,
-            font=WinampStyle.FONT_LCD,
-            bg=WinampStyle.BG_SUNKEN,
-            fg=WinampStyle.TEXT_LCD,
-            relief="sunken",
-            bd=1,
-            anchor="w"
+            font=WinampStyle.FONT_SMALL,
+            bg=WinampStyle.BG_LCD,
+            fg=WinampStyle.TEXT_LCD_DIM,
+            anchor="w",
+            justify="left"
         )
-        self.url_status_label.grid(row=2, column=0, columnspan=3, sticky="ew", pady=(5, 8), padx=10)
+        self.url_status_label.grid(row=1, column=0, columnspan=3, sticky="ew", pady=(2, 0))
     
     def create_video_info_section(self, parent, row):
-        """Create video information display section - Winamp style"""
-        self.info_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="groove", bd=2)
-        self.info_frame.grid(row=row, column=0, columnspan=3, sticky="ew", pady=(5, 10), padx=10)
-        self.info_frame.columnconfigure(1, weight=1)
-        
-        # Section title
-        title_label = tk.Label(
-            self.info_frame, 
-            text="=== VIDEO INFORMATION ===", 
-            font=WinampStyle.FONT_HEADING,
-            fg=WinampStyle.ACCENT_COLOR,
-            bg=WinampStyle.BG_SECONDARY
+        """Create video information display section - LCD style"""
+        self.info_frame = tk.Frame(
+            parent,
+            bg=WinampStyle.BG_LCD,
+            relief="flat"
         )
-        title_label.grid(row=0, column=0, columnspan=2, pady=(8, 5))
+        self.info_frame.grid(row=row, column=0, sticky="ew", pady=2, padx=4)
+        self.info_frame.columnconfigure(0, weight=1)
         
         # Initially hidden
         self.info_frame.grid_remove()
         
-        # Video info labels
+        # Video info variables
         self.title_var = tk.StringVar()
         self.duration_var = tk.StringVar()
         self.uploader_var = tk.StringVar()
         
-        info_labels = [
-            ("Title:", self.title_var),
-            ("Duration:", self.duration_var),
-            ("Uploader:", self.uploader_var)
-        ]
+        # Create scrolling text display area for video title (like Winamp's main display)
+        self.title_display = tk.Label(
+            self.info_frame,
+            textvariable=self.title_var,
+            font=WinampStyle.FONT_LCD,
+            fg=WinampStyle.TEXT_LCD,
+            bg=WinampStyle.BG_LCD,
+            anchor="w",
+            justify="left"
+        )
+        self.title_display.grid(row=0, column=0, sticky="ew", pady=2)
         
-        for i, (label_text, var) in enumerate(info_labels):
-            # Label
-            tk.Label(
-                self.info_frame, 
-                text=label_text, 
-                font=WinampStyle.FONT_MAIN,
-                fg=WinampStyle.TEXT_PRIMARY,
-                bg=WinampStyle.BG_SECONDARY
-            ).grid(row=i+1, column=0, sticky="w", padx=(10, 10), pady=2)
-            
-            # Value with LCD-style display
-            tk.Label(
-                self.info_frame, 
-                textvariable=var, 
-                font=WinampStyle.FONT_LCD,
-                fg=WinampStyle.TEXT_LCD,
-                bg=WinampStyle.BG_SUNKEN,
-                relief="sunken",
-                bd=1,
-                anchor="w"
-            ).grid(row=i+1, column=1, sticky="ew", pady=2, padx=(0, 10))
+        # Duration and uploader info in smaller text
+        info_frame = tk.Frame(self.info_frame, bg=WinampStyle.BG_LCD)
+        info_frame.grid(row=1, column=0, sticky="ew")
+        info_frame.columnconfigure(1, weight=1)
+        
+        # Duration
+        duration_label = tk.Label(
+            info_frame,
+            textvariable=self.duration_var,
+            font=WinampStyle.FONT_SMALL,
+            fg=WinampStyle.TEXT_LCD_DIM,
+            bg=WinampStyle.BG_LCD,
+            anchor="w"
+        )
+        duration_label.grid(row=0, column=0, sticky="w")
+        
+        # Uploader
+        uploader_label = tk.Label(
+            info_frame,
+            textvariable=self.uploader_var,
+            font=WinampStyle.FONT_SMALL,
+            fg=WinampStyle.TEXT_LCD_DIM,
+            bg=WinampStyle.BG_LCD,
+            anchor="e"
+        )
+        uploader_label.grid(row=0, column=1, sticky="e")
     
     def create_time_section(self, parent, row):
-        """Create time range input section - Winamp style"""
-        time_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="groove", bd=2)
-        time_frame.grid(row=row, column=0, columnspan=3, sticky="ew", pady=(5, 10), padx=10)
+        """Create time range input section - Authentic panel style"""
+        parent.columnconfigure(0, weight=1)
+        
+        # Panel title
+        title_label = tk.Label(
+            parent,
+            text="Time Range",
+            font=WinampStyle.FONT_HEADING,
+            fg=WinampStyle.TEXT_PRIMARY,
+            bg=WinampStyle.BG_SECONDARY
+        )
+        title_label.grid(row=0, column=0, sticky="ew", pady=(4, 2), padx=4)
+        
+        # Time inputs frame
+        time_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY)
+        time_frame.grid(row=1, column=0, sticky="ew", padx=4, pady=2)
         time_frame.columnconfigure(1, weight=1)
         time_frame.columnconfigure(3, weight=1)
         
-        # Section title
-        title_label = tk.Label(
-            time_frame, 
-            text="=== TIME RANGE ===", 
-            font=WinampStyle.FONT_HEADING,
-            fg=WinampStyle.ACCENT_COLOR,
-            bg=WinampStyle.BG_SECONDARY
-        )
-        title_label.grid(row=0, column=0, columnspan=4, pady=(8, 10))
-        
         # Start time
         tk.Label(
-            time_frame, 
-            text="START:", 
+            time_frame,
+            text="START",
             font=WinampStyle.FONT_MAIN,
             fg=WinampStyle.TEXT_PRIMARY,
             bg=WinampStyle.BG_SECONDARY
-        ).grid(row=1, column=0, sticky="w", padx=(10, 10))
+        ).grid(row=0, column=0, sticky="w", padx=(2, 4))
         
         self.start_time_var = tk.StringVar()
         self.start_entry = tk.Entry(
-            time_frame, 
-            textvariable=self.start_time_var, 
-            width=15,
-            font=WinampStyle.FONT_MAIN,
-            bg=WinampStyle.BG_SUNKEN,
-            fg=WinampStyle.TEXT_LCD,
-            relief="sunken",
-            bd=2,
-            insertbackground=WinampStyle.TEXT_LCD
-        )
-        self.start_entry.grid(row=1, column=1, sticky="w", padx=(0, 20))
-        self.start_entry.bind('<KeyRelease>', self.on_time_change)
-        
-        # End time
-        tk.Label(
-            time_frame, 
-            text="END:", 
-            font=WinampStyle.FONT_MAIN,
-            fg=WinampStyle.TEXT_PRIMARY,
-            bg=WinampStyle.BG_SECONDARY
-        ).grid(row=1, column=2, sticky="w", padx=(0, 10))
-        
-        self.end_time_var = tk.StringVar()
-        self.end_entry = tk.Entry(
-            time_frame, 
-            textvariable=self.end_time_var, 
-            width=15,
-            font=WinampStyle.FONT_MAIN,
-            bg=WinampStyle.BG_SUNKEN,
-            fg=WinampStyle.TEXT_LCD,
-            relief="sunken",
-            bd=2,
-            insertbackground=WinampStyle.TEXT_LCD
-        )
-        self.end_entry.grid(row=1, column=3, sticky="w", padx=(0, 10))
-        self.end_entry.bind('<KeyRelease>', self.on_time_change)
-        
-        # Time format help
-        time_help = tk.Label(
-            time_frame, 
-            text="[ Formats: HH:MM:SS, MM:SS, or seconds (e.g., 90, 1:30, 0:01:30) ]",
-            font=WinampStyle.FONT_SMALL,
-            fg=WinampStyle.TEXT_SECONDARY,
-            bg=WinampStyle.BG_SECONDARY
-        )
-        time_help.grid(row=2, column=0, columnspan=4, sticky="w", pady=(5, 0), padx=10)
-        
-        # Time validation status with LCD display
-        self.time_status_var = tk.StringVar()
-        self.time_status_label = tk.Label(
             time_frame,
-            textvariable=self.time_status_var,
-            font=WinampStyle.FONT_LCD,
+            textvariable=self.start_time_var,
+            width=10,
+            font=WinampStyle.FONT_MAIN,
             bg=WinampStyle.BG_SUNKEN,
             fg=WinampStyle.TEXT_LCD,
             relief="sunken",
             bd=1,
-            anchor="w"
+            insertbackground=WinampStyle.TEXT_LCD
         )
-        self.time_status_label.grid(row=3, column=0, columnspan=4, sticky="ew", pady=(5, 8), padx=10)
-    
-    def create_output_section(self, parent, row):
-        """Create output options section - Winamp style"""
-        output_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="groove", bd=2)
-        output_frame.grid(row=row, column=0, columnspan=3, sticky="ew", pady=(5, 10), padx=10)
-        output_frame.columnconfigure(1, weight=1)
+        self.start_entry.grid(row=0, column=1, sticky="ew", padx=(0, 8))
+        self.start_entry.bind('<KeyRelease>', self.on_time_change)
         
-        # Section title
-        title_label = tk.Label(
-            output_frame, 
-            text="=== OUTPUT OPTIONS ===", 
-            font=WinampStyle.FONT_HEADING,
-            fg=WinampStyle.ACCENT_COLOR,
-            bg=WinampStyle.BG_SECONDARY
-        )
-        title_label.grid(row=0, column=0, columnspan=3, pady=(8, 10))
-        
-        # Output type
+        # End time
         tk.Label(
-            output_frame, 
-            text="TYPE:", 
+            time_frame,
+            text="END",
             font=WinampStyle.FONT_MAIN,
             fg=WinampStyle.TEXT_PRIMARY,
             bg=WinampStyle.BG_SECONDARY
-        ).grid(row=1, column=0, sticky="w", padx=(10, 10))
+        ).grid(row=0, column=2, sticky="w", padx=(0, 4))
+        
+        self.end_time_var = tk.StringVar()
+        self.end_entry = tk.Entry(
+            time_frame,
+            textvariable=self.end_time_var,
+            width=10,
+            font=WinampStyle.FONT_MAIN,
+            bg=WinampStyle.BG_SUNKEN,
+            fg=WinampStyle.TEXT_LCD,
+            relief="sunken",
+            bd=1,
+            insertbackground=WinampStyle.TEXT_LCD
+        )
+        self.end_entry.grid(row=0, column=3, sticky="ew", padx=(0, 2))
+        self.end_entry.bind('<KeyRelease>', self.on_time_change)
+        
+        # Time format help
+        time_help = tk.Label(
+            parent,
+            text="Format: MM:SS or HH:MM:SS",
+            font=WinampStyle.FONT_SMALL,
+            fg=WinampStyle.TEXT_SECONDARY,
+            bg=WinampStyle.BG_SECONDARY
+        )
+        time_help.grid(row=2, column=0, sticky="w", pady=(2, 2), padx=4)
+        
+        # Time validation status
+        self.time_status_var = tk.StringVar()
+        self.time_status_label = tk.Label(
+            parent,
+            textvariable=self.time_status_var,
+            font=WinampStyle.FONT_SMALL,
+            bg=WinampStyle.BG_SECONDARY,
+            fg=WinampStyle.TEXT_SUCCESS,
+            anchor="w"
+        )
+        self.time_status_label.grid(row=3, column=0, sticky="ew", pady=(2, 4), padx=4)
+    
+    def create_output_section(self, parent, row):
+        """Create output options section - Authentic panel style"""
+        parent.columnconfigure(0, weight=1)
+        
+        # Panel title
+        title_label = tk.Label(
+            parent,
+            text="Output Options",
+            font=WinampStyle.FONT_HEADING,
+            fg=WinampStyle.TEXT_PRIMARY,
+            bg=WinampStyle.BG_SECONDARY
+        )
+        title_label.grid(row=0, column=0, sticky="ew", pady=(4, 2), padx=4)
+        
+        # Output type selection
+        type_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY)
+        type_frame.grid(row=1, column=0, sticky="ew", padx=4, pady=2)
         
         self.output_type_var = tk.StringVar(value="video")
-        type_frame = tk.Frame(output_frame, bg=WinampStyle.BG_SECONDARY)
-        type_frame.grid(row=1, column=1, sticky="w", pady=(0, 10), padx=(0, 10))
         
         tk.Radiobutton(
-            type_frame, 
-            text="Video (MP4)", 
-            variable=self.output_type_var, 
+            type_frame,
+            text="MP4 Video",
+            variable=self.output_type_var,
             value="video",
             font=WinampStyle.FONT_MAIN,
             bg=WinampStyle.BG_SECONDARY,
             fg=WinampStyle.TEXT_PRIMARY,
-            selectcolor=WinampStyle.BG_ACCENT,
-            activebackground=WinampStyle.BG_ACCENT,
-            activeforeground=WinampStyle.TEXT_LCD
-        ).grid(row=0, column=0, padx=(0, 20))
+            selectcolor=WinampStyle.BG_ACCENT
+        ).pack(side="left", padx=(2, 10))
         
         tk.Radiobutton(
-            type_frame, 
-            text="Audio Only (MP3)", 
-            variable=self.output_type_var, 
+            type_frame,
+            text="MP3 Audio",
+            variable=self.output_type_var,
             value="audio",
             font=WinampStyle.FONT_MAIN,
             bg=WinampStyle.BG_SECONDARY,
             fg=WinampStyle.TEXT_PRIMARY,
-            selectcolor=WinampStyle.BG_ACCENT,
-            activebackground=WinampStyle.BG_ACCENT,
-            activeforeground=WinampStyle.TEXT_LCD
-        ).grid(row=0, column=1)
+            selectcolor=WinampStyle.BG_ACCENT
+        ).pack(side="left")
         
-        # Output filename
-        tk.Label(
-            output_frame, 
-            text="FILENAME:", 
-            font=WinampStyle.FONT_MAIN,
-            fg=WinampStyle.TEXT_PRIMARY,
-            bg=WinampStyle.BG_SECONDARY
-        ).grid(row=2, column=0, sticky="w", padx=(10, 10))
-        
-        filename_frame = tk.Frame(output_frame, bg=WinampStyle.BG_SECONDARY)
-        filename_frame.grid(row=2, column=1, columnspan=2, sticky="ew", padx=(0, 10))
+        # Filename input
+        filename_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY)
+        filename_frame.grid(row=2, column=0, sticky="ew", padx=4, pady=2)
         filename_frame.columnconfigure(0, weight=1)
         
         self.filename_var = tk.StringVar()
         self.filename_entry = tk.Entry(
-            filename_frame, 
+            filename_frame,
             textvariable=self.filename_var,
             font=WinampStyle.FONT_MAIN,
             bg=WinampStyle.BG_SUNKEN,
             fg=WinampStyle.TEXT_LCD,
             relief="sunken",
-            bd=2,
+            bd=1,
             insertbackground=WinampStyle.TEXT_LCD
         )
-        self.filename_entry.grid(row=0, column=0, sticky="ew", padx=(0, 10))
+        self.filename_entry.grid(row=0, column=0, sticky="ew", padx=(2, 4))
         
         self.browse_btn = tk.Button(
-            filename_frame, 
-            text="BROWSE...", 
+            filename_frame,
+            text="...",
             command=self.browse_output_file,
-            width=12,
+            width=3,
             font=WinampStyle.FONT_BUTTON,
-            bg=WinampStyle.BG_ACCENT,
+            bg=WinampStyle.BUTTON_FACE,
             fg=WinampStyle.TEXT_PRIMARY,
             relief="raised",
             bd=2,
-            activebackground=WinampStyle.ACCENT_HOVER,
-            activeforeground=WinampStyle.TEXT_LCD
+            activebackground=WinampStyle.ACCENT_ORANGE,
+            activeforeground=WinampStyle.TEXT_WHITE,
+            cursor="hand2"
         )
-        self.browse_btn.grid(row=0, column=1)
+        self.browse_btn.grid(row=0, column=1, padx=2)
+        
+        # Add hover effects for browse button
+        self.browse_btn.bind("<Enter>", lambda e: self.browse_btn.configure(bg=WinampStyle.ACCENT_ORANGE))
+        self.browse_btn.bind("<Leave>", lambda e: self.browse_btn.configure(bg=WinampStyle.BUTTON_FACE))
         
         # Auto-generate checkbox
         self.auto_filename_var = tk.BooleanVar(value=True)
         auto_check = tk.Checkbutton(
-            output_frame,
-            text="[ AUTO-GENERATE FILENAME FROM VIDEO TITLE ]",
+            parent,
+            text="Auto-generate from title",
             variable=self.auto_filename_var,
             command=self.on_auto_filename_change,
             font=WinampStyle.FONT_SMALL,
             bg=WinampStyle.BG_SECONDARY,
             fg=WinampStyle.TEXT_SECONDARY,
-            selectcolor=WinampStyle.BG_ACCENT,
-            activebackground=WinampStyle.BG_SECONDARY,
-            activeforeground=WinampStyle.TEXT_LCD
+            selectcolor=WinampStyle.BG_ACCENT
         )
-        auto_check.grid(row=3, column=1, sticky="w", pady=(5, 8), padx=(0, 10))
+        auto_check.grid(row=3, column=0, sticky="w", pady=(2, 4), padx=4)
     
     def create_action_buttons(self, parent, row):
-        """Create main action buttons - Winamp style"""
-        button_frame = tk.Frame(parent, bg=WinampStyle.BG_ACCENT)
-        button_frame.grid(row=row, column=0, columnspan=3, pady=(15, 15), padx=20, sticky="ew")
+        """Create main action buttons - Authentic YouClip style with enhanced polish"""
+        button_frame = tk.Frame(parent, bg=WinampStyle.BG_PRIMARY)
+        button_frame.grid(row=row, column=0, sticky="ew", pady=4, padx=2)
+        
+        # Create classic YouClip-style transport buttons with authentic Winamp metallic styling
+        transport_frame = tk.Frame(button_frame, bg=WinampStyle.CHROME_MID, relief="raised", bd=2)
+        transport_frame.pack(fill="x", padx=2, pady=2)
         
         # Center the buttons
-        button_frame.grid_columnconfigure(0, weight=1)
-        button_frame.grid_columnconfigure(4, weight=1)
+        button_container = tk.Frame(transport_frame, bg=WinampStyle.CHROME_MID)
+        button_container.pack(expand=True, pady=4)
         
-        # Download button - main action
+        # Download button (play button style) - Enhanced with hover effects
         self.download_btn = tk.Button(
-            button_frame,
-            text=">>> DOWNLOAD CLIP <<<",
+            button_container,
+            text="► DOWNLOAD",
             command=self.start_download,
             font=WinampStyle.FONT_BUTTON,
-            bg=WinampStyle.ACCENT_COLOR,
-            fg=WinampStyle.BG_PRIMARY,
-            relief="raised",
-            bd=3,
-            width=20,
-            activebackground=WinampStyle.ACCENT_HOVER,
-            activeforeground=WinampStyle.BG_PRIMARY
-        )
-        self.download_btn.grid(row=0, column=1, padx=10, pady=8)
-        
-        # Cancel button
-        self.cancel_btn = tk.Button(
-            button_frame,
-            text="CANCEL",
-            command=self.cancel_download,
-            font=WinampStyle.FONT_BUTTON,
-            bg=WinampStyle.TEXT_ERROR,
-            fg=WinampStyle.BG_PRIMARY,
-            relief="raised",
-            bd=2,
-            width=12,
-            state="disabled",
-            activebackground="#ff3333",
-            activeforeground=WinampStyle.BG_PRIMARY
-        )
-        self.cancel_btn.grid(row=0, column=2, padx=10, pady=8)
-        
-        # Clear button
-        self.clear_btn = tk.Button(
-            button_frame,
-            text="CLEAR ALL",
-            command=self.clear_all,
-            font=WinampStyle.FONT_BUTTON,
-            bg=WinampStyle.BG_ACCENT,
+            bg=WinampStyle.BUTTON_FACE,
             fg=WinampStyle.TEXT_PRIMARY,
             relief="raised",
-            bd=2,
-            width=12,
-            activebackground=WinampStyle.ACCENT_HOVER,
-            activeforeground=WinampStyle.TEXT_LCD
+            bd=3,
+            width=14,
+            height=2,
+            activebackground=WinampStyle.ACCENT_ORANGE_LIGHT,
+            activeforeground=WinampStyle.TEXT_WHITE,
+            cursor="hand2"
         )
-        self.clear_btn.grid(row=0, column=3, padx=10, pady=8)
+        self.download_btn.pack(side="left", padx=3)
+        
+        # Add hover effects
+        self.download_btn.bind("<Enter>", lambda e: self.download_btn.configure(bg=WinampStyle.ACCENT_ORANGE))
+        self.download_btn.bind("<Leave>", lambda e: self.download_btn.configure(bg=WinampStyle.BUTTON_FACE))
+        
+        # Cancel button (stop button style) - Enhanced
+        self.cancel_btn = tk.Button(
+            button_container,
+            text="■ STOP",
+            command=self.cancel_download,
+            font=WinampStyle.FONT_BUTTON,
+            bg=WinampStyle.BUTTON_FACE,
+            fg=WinampStyle.TEXT_PRIMARY,
+            relief="raised",
+            bd=3,
+            width=10,
+            height=2,
+            state="disabled",
+            activebackground=WinampStyle.TEXT_ERROR,
+            activeforeground=WinampStyle.TEXT_WHITE,
+            cursor="hand2"
+        )
+        self.cancel_btn.pack(side="left", padx=3)
+        
+        # Clear button (reset button style) - Enhanced
+        clear_btn = tk.Button(
+            button_container,
+            text="⟲ CLEAR",
+            command=self.clear_all,
+            font=WinampStyle.FONT_BUTTON,
+            bg=WinampStyle.BUTTON_FACE,
+            fg=WinampStyle.TEXT_PRIMARY,
+            relief="raised",
+            bd=3,
+            width=10,
+            height=2,
+            activebackground=WinampStyle.TEXT_WARNING,
+            activeforeground=WinampStyle.TEXT_WHITE,
+            cursor="hand2"
+        )
+        clear_btn.pack(side="left", padx=3)
+        
+        # Add hover effects for clear button
+        clear_btn.bind("<Enter>", lambda e: clear_btn.configure(bg=WinampStyle.TEXT_WARNING))
+        clear_btn.bind("<Leave>", lambda e: clear_btn.configure(bg=WinampStyle.BUTTON_FACE))
     
     def create_progress_section(self, parent, row):
-        """Create progress tracking section - Winamp style"""
-        self.progress_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="groove", bd=2)
-        self.progress_frame.grid(row=row, column=0, columnspan=3, sticky="ew", pady=(5, 10), padx=10)
+        """Create progress tracking section - Enhanced YouClip style"""
+        self.progress_frame = tk.Frame(parent, bg=WinampStyle.BG_PRIMARY)
+        self.progress_frame.grid(row=row, column=0, sticky="ew", pady=2, padx=2)
         self.progress_frame.columnconfigure(0, weight=1)
-        
-        # Section title
-        title_label = tk.Label(
-            self.progress_frame, 
-            text="=== PROGRESS ===", 
-            font=WinampStyle.FONT_HEADING,
-            fg=WinampStyle.ACCENT_COLOR,
-            bg=WinampStyle.BG_SECONDARY
-        )
-        title_label.grid(row=0, column=0, pady=(8, 5))
         
         # Initially hidden
         self.progress_frame.grid_remove()
         
-        # Progress bar - Winamp style (using a frame as a fake progress bar)
+        # Progress display area with enhanced styling
+        progress_display = tk.Frame(
+            self.progress_frame,
+            bg=WinampStyle.BG_SECONDARY,
+            relief="sunken",
+            bd=2
+        )
+        progress_display.pack(fill="x", padx=2, pady=2)
+        progress_display.columnconfigure(0, weight=1)
+        
+        # Progress bar - enhanced LCD style with better visibility
         self.progress_var = tk.DoubleVar()
         self.progress_bar = tk.Frame(
-            self.progress_frame,
-            bg=WinampStyle.BG_SUNKEN,
+            progress_display,
+            bg=WinampStyle.BG_LCD,
             relief="sunken",
             bd=2,
             height=20
         )
-        self.progress_bar.grid(row=1, column=0, sticky="ew", pady=(0, 5), padx=10)
+        self.progress_bar.grid(row=0, column=0, sticky="ew", pady=3, padx=4)
         
-        # Progress status with LCD display
+        # Progress status with enhanced LCD display
         self.progress_status_var = tk.StringVar()
         self.progress_status_label = tk.Label(
-            self.progress_frame,
+            progress_display,
             textvariable=self.progress_status_var,
             font=WinampStyle.FONT_LCD,
-            bg=WinampStyle.BG_SUNKEN,
+            bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
-            relief="sunken",
-            bd=1,
-            anchor="w"
+            anchor="w",
+            relief="flat",
+            bd=1
         )
-        self.progress_status_label.grid(row=2, column=0, sticky="ew", padx=10, pady=(0, 8))
+        self.progress_status_label.grid(row=1, column=0, sticky="ew", padx=4, pady=(0, 3))
     
     def create_status_section(self, parent, row):
-        """Create status/log section - Winamp style"""
-        status_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="groove", bd=2)
-        status_frame.grid(row=row, column=0, columnspan=3, sticky="nsew", pady=(5, 10), padx=10)
+        """Create status/log section - Enhanced YouClip style"""
+        status_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="sunken", bd=2)
+        status_frame.grid(row=row, column=0, sticky="nsew", pady=2, padx=2)
         status_frame.columnconfigure(0, weight=1)
-        status_frame.rowconfigure(1, weight=1)
-        
-        # Section title
-        title_label = tk.Label(
-            status_frame, 
-            text="=== STATUS LOG ===", 
-            font=WinampStyle.FONT_HEADING,
-            fg=WinampStyle.ACCENT_COLOR,
-            bg=WinampStyle.BG_SECONDARY
-        )
-        title_label.grid(row=0, column=0, pady=(8, 5))
+        status_frame.rowconfigure(0, weight=1)
         
         # Configure main frame to expand this section
         parent.rowconfigure(row, weight=1)
         
-        # Status text area with Winamp styling
+        # Status text area with enhanced YouClip styling
         self.status_text = scrolledtext.ScrolledText(
             status_frame,
-            height=8,
+            height=6,
             wrap=tk.WORD,
             font=WinampStyle.FONT_SMALL,
-            bg=WinampStyle.BG_SUNKEN,
+            bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
-            relief="sunken",
-            bd=2,
+            relief="flat",
+            bd=0,
             insertbackground=WinampStyle.TEXT_LCD,
-            selectbackground=WinampStyle.BG_ACCENT,
-            selectforeground=WinampStyle.TEXT_LCD,
+            selectbackground=WinampStyle.ACCENT_ORANGE,
+            selectforeground=WinampStyle.BG_LCD,
             state=tk.DISABLED
         )
-        self.status_text.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 8))
+        self.status_text.grid(row=0, column=0, sticky="nsew", padx=3, pady=3)
         
-        # Add initial message
-        self.log_message(">>> YouClip GUI ready! Enter a YouTube URL to begin. <<<", "info")
+        # Add initial message with enhanced retro styling
+        self.log_message("🎵 YouClip v2.1 Ready - Enter YouTube URL to begin 🎵", "info")
     
     def setup_styles(self):
         """Configure custom Winamp-inspired styles"""
@@ -678,7 +869,7 @@ class YouTubeClipGUI:
         style.map(
             "Winamp.TButton",
             background=[
-                ("active", WinampStyle.ACCENT_HOVER),
+                ("active", WinampStyle.ACCENT_ORANGE_LIGHT),
                 ("pressed", WinampStyle.BG_SUNKEN)
             ],
             foreground=[
@@ -703,7 +894,7 @@ class YouTubeClipGUI:
         style.configure(
             "Winamp.TLabelFrame.Label",
             background=WinampStyle.BG_SECONDARY,
-            foreground=WinampStyle.ACCENT_COLOR,
+            foreground=WinampStyle.ACCENT_ORANGE,
             font=WinampStyle.FONT_HEADING
         )
         
@@ -746,10 +937,10 @@ class YouTubeClipGUI:
         
         # Validate URL
         if Validators.is_valid_youtube_url(url):
-            self.url_status_var.set("✅ Valid YouTube URL")
+            self.url_status_var.set("VALID URL")
             self.preview_btn.configure(state="normal")
         else:
-            self.url_status_var.set("❌ Invalid YouTube URL")
+            self.url_status_var.set("INVALID URL")
             self.preview_btn.configure(state="disabled")
     
     def on_time_change(self, event=None):
@@ -766,19 +957,19 @@ class YouTubeClipGUI:
             end_time = TimeParser.parse_time(end_str)
             
             if start_time >= end_time:
-                self.time_status_var.set("❌ End time must be greater than start time")
+                self.time_status_var.set("ERROR: End > Start")
                 return
             
             duration = end_time - start_time
             duration_str = TimeParser.seconds_to_timestamp(duration)
-            self.time_status_var.set(f"✅ Clip duration: {duration_str}")
+            self.time_status_var.set(f"DURATION: {duration_str}")
             
             # Update filename if auto-generate is enabled
             if self.auto_filename_var.get() and self.current_video_info:
                 self.update_auto_filename()
             
         except ValueError as e:
-            self.time_status_var.set(f"❌ {str(e)}")
+            self.time_status_var.set(f"ERROR: {str(e)}")
     
     def on_auto_filename_change(self):
         """Handle auto-filename checkbox change"""
@@ -837,17 +1028,27 @@ class YouTubeClipGUI:
         
         info = self.current_video_info
         
-        # Update info labels
-        self.title_var.set(info.get('title', 'Unknown'))
+        # Update info labels with scrolling title effect
+        title = info.get('title', 'Unknown')
+        self.title_text = title
+        self.title_scroll_pos = 0
+        self.title_scroll_active = len(title) > 40  # Start scrolling if title is long
+        
+        # Update window title like classic Winamp
+        short_title = title[:50] + "..." if len(title) > 50 else title
+        self.root.title(f"YouClip v2.1 - {short_title} - Winamp")
         
         duration = info.get('duration')
         if duration:
             duration_str = TimeParser.seconds_to_timestamp(duration)
-            self.duration_var.set(duration_str)
+            self.duration_var.set(f"Duration: {duration_str}")
         else:
-            self.duration_var.set('Unknown')
+            self.duration_var.set('Duration: Unknown')
         
-        self.uploader_var.set(info.get('uploader', 'Unknown'))
+        uploader = info.get('uploader', 'Unknown')
+        if len(uploader) > 30:
+            uploader = uploader[:27] + "..."
+        self.uploader_var.set(f"By: {uploader}")
         
         # Show info frame
         self.info_frame.grid()
@@ -859,7 +1060,36 @@ class YouTubeClipGUI:
         # Hide progress
         self.hide_progress()
         
-        self.log_message(f"✅ Video info loaded: {info.get('title', 'Unknown')}", "success")
+        self.log_message(f"Video info loaded: {title}", "success")
+    
+    def animate_title_scroll(self):
+        """Animate scrolling title text like classic Winamp"""
+        if self.title_scroll_active and self.title_text:
+            display_width = 35  # Maximum characters to display
+            
+            if len(self.title_text) <= display_width:
+                # Text fits, no scrolling needed
+                display_text = self.title_text
+            else:
+                # Scroll the text
+                extended_text = self.title_text + " *** "
+                
+                if self.title_scroll_pos >= len(extended_text):
+                    self.title_scroll_pos = 0
+                
+                # Get the display portion
+                display_text = extended_text[self.title_scroll_pos:self.title_scroll_pos + display_width]
+                if len(display_text) < display_width:
+                    display_text += extended_text[:display_width - len(display_text)]
+                
+                self.title_scroll_pos += 1
+            
+            # Update the display
+            if hasattr(self, 'title_var'):
+                self.title_var.set(display_text)
+        
+        # Schedule next animation frame
+        self.root.after(200, self.animate_title_scroll)  # Update every 200ms
     
     def update_auto_filename(self):
         """Update filename based on video info and time range"""
@@ -919,20 +1149,24 @@ class YouTubeClipGUI:
     
     def start_download(self):
         """Start the download process"""
-        # Validate inputs
         if not self.validate_inputs():
             return
         
-        # Disable download button and enable cancel
-        self.download_btn.configure(state="disabled")
-        self.cancel_btn.configure(state="normal")
+        # Update window title to show download in progress
+        self.root.title("YouClip v2.1 - [Downloading...] - Winamp")
         
         # Show progress
-        self.show_progress("Starting download...")
+        self.show_progress("Preparing download...")
         
-        # Start download thread
+        # Disable download button, enable cancel
+        self.download_btn.configure(state="disabled", text="⧗ DOWNLOADING")
+        self.cancel_btn.configure(state="normal")
+        
+        # Start download in separate thread
         self.download_thread = threading.Thread(target=self.download_worker, daemon=True)
         self.download_thread.start()
+        
+        self.log_message("Download started...", "info")
     
     def download_worker(self):
         """Worker thread for download process"""
@@ -963,40 +1197,46 @@ class YouTubeClipGUI:
             self.root.after(0, lambda: self.handle_error(f"Download failed: {str(e)}"))
     
     def download_complete(self, result_path):
-        """Handle successful download completion"""
-        # Hide progress
+        """Handle download completion"""
+        # Reset UI state
+        self.download_btn.configure(state="normal", text="► DOWNLOAD")
+        self.cancel_btn.configure(state="disabled")
         self.hide_progress()
         
-        # Re-enable buttons
-        self.download_btn.configure(state="normal")
-        self.cancel_btn.configure(state="disabled")
-        
-        # Show success message
-        file_size = os.path.getsize(result_path) if os.path.exists(result_path) else 0
-        file_size_mb = file_size / (1024 * 1024)
-        
-        success_msg = f"✅ Clip created successfully!\n\nFile: {os.path.basename(result_path)}\nSize: {file_size_mb:.2f} MB\nLocation: {os.path.dirname(result_path)}"
-        
-        result = messagebox.askquestion(
-            "Download Complete",
-            f"{success_msg}\n\nWould you like to open the containing folder?",
-            icon='question'
-        )
-        
-        if result == 'yes':
-            self.open_file_location(result_path)
-        
-        self.log_message(f"Download complete: {result_path}", "success")
+        if result_path and os.path.exists(result_path):
+            # Update window title to show completion
+            self.root.title("YouClip v2.1 - [Complete] - Winamp")
+            
+            self.log_message(f"Download completed: {result_path}", "success")
+            
+            # Show completion dialog with option to open file location
+            result = messagebox.askyesno(
+                "Download Complete", 
+                f"Clip saved successfully!\n\nFile: {os.path.basename(result_path)}\n\nWould you like to open the file location?",
+                icon="question"
+            )
+            
+            if result:
+                self.open_file_location(result_path)
+        else:
+            self.root.title("YouClip v2.1 - [Error] - Winamp")
+            self.log_message("Download failed!", "error")
+            messagebox.showerror("Download Error", "Download failed. Check the status log for details.")
     
     def cancel_download(self):
         """Cancel the current download"""
-        # Note: This is a simplified cancel - in a production app you'd need 
-        # more sophisticated thread management
-        self.hide_progress()
-        self.download_btn.configure(state="normal")
-        self.cancel_btn.configure(state="disabled")
-        
-        self.log_message("Download cancelled by user", "warning")
+        if self.download_thread and self.download_thread.is_alive():
+            # Note: This is a graceful request to stop, actual stopping depends on the processor
+            self.processor.stop_download()
+            self.log_message("Download cancellation requested...", "warning")
+            
+            # Update window title
+            self.root.title("YouClip v2.1 - [Stopped] - Winamp")
+            
+            # Reset UI state
+            self.download_btn.configure(state="normal", text="► DOWNLOAD")
+            self.cancel_btn.configure(state="disabled")
+            self.hide_progress()
     
     def validate_inputs(self):
         """Validate all user inputs before download"""
@@ -1078,7 +1318,7 @@ class YouTubeClipGUI:
             # Alternate between two colors to simulate activity
             current_color = self.progress_bar.cget('bg')
             if current_color == WinampStyle.BG_SUNKEN:
-                new_color = WinampStyle.ACCENT_COLOR
+                new_color = WinampStyle.ACCENT_ORANGE
             else:
                 new_color = WinampStyle.BG_SUNKEN
             
@@ -1151,6 +1391,24 @@ class YouTubeClipGUI:
                 subprocess.run(["xdg-open", os.path.dirname(file_path)])
         except Exception as e:
             messagebox.showwarning("Warning", f"Could not open file location: {str(e)}")
+    
+    def show_about(self):
+        """Show about dialog with retro styling"""
+        about_text = """YouClip v2.1 - Winamp Edition
+        
+YouTube Video Clip Downloader
+Designed with authentic early 2000s Winamp styling
+
+Keyboard Shortcuts:
+Ctrl+L    - Focus URL field
+Ctrl+Enter - Start download
+Escape    - Stop download
+Ctrl+C    - Clear all
+F1        - This help
+
+Created with ♫ nostalgia ♫"""
+        
+        messagebox.showinfo("About YouClip", about_text)
     
     def run(self):
         """Start the GUI application"""
