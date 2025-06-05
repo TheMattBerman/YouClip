@@ -36,6 +36,15 @@ class Validators:
         
         url = url.strip()
         
+        # Remove common prefixes that users might accidentally include
+        if url.startswith('@'):
+            url = url[1:]
+        if url.startswith('www.'):
+            url = 'https://' + url
+        elif not url.startswith(('http://', 'https://')):
+            if 'youtube.com' in url or 'youtu.be' in url:
+                url = 'https://' + url
+        
         for pattern in Validators.YOUTUBE_PATTERNS:
             if re.match(pattern, url, re.IGNORECASE):
                 return True
@@ -53,8 +62,19 @@ class Validators:
         Returns:
             Video ID if found, None otherwise
         """
-        if not Validators.is_valid_youtube_url(url):
+        if not url or not isinstance(url, str):
             return None
+        
+        url = url.strip()
+        
+        # Clean up the URL first (same as in is_valid_youtube_url)
+        if url.startswith('@'):
+            url = url[1:]
+        if url.startswith('www.'):
+            url = 'https://' + url
+        elif not url.startswith(('http://', 'https://')):
+            if 'youtube.com' in url or 'youtu.be' in url:
+                url = 'https://' + url
         
         for pattern in Validators.YOUTUBE_PATTERNS:
             match = re.match(pattern, url, re.IGNORECASE)

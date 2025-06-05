@@ -119,10 +119,12 @@ class VideoProcessor:
             return None
         
         if audio_only:
-            return 'bestaudio/best'
+            # Try audio formats in order of preference, fallback to any available
+            return 'bestaudio[ext=m4a]/bestaudio[ext=mp3]/bestaudio/best'
         else:
-            # Get best video+audio or fallback to best available
-            return 'best[ext=mp4]/best'
+            # For video, try best combined format, then best video+audio merge, then any best
+            # Note: not specifying format lets yt-dlp choose the best available
+            return 'best[height<=1080]/best'
     
     def create_clip(self, url: str, start_time: float, end_time: float, 
                    output_path: str, audio_only: bool = False, 
@@ -241,16 +243,23 @@ class VideoProcessor:
             
         Returns:
             Path to extracted clip
+            
+        Note:
+            Key optimizations for accurate video clipping:
+            1. Place -ss before -i for faster seeking (input seeking vs output seeking)
+            2. Use re-encoding for short clips (<60s) to ensure frame accuracy
+            3. Use stream copy for longer clips to maintain speed
+            4. Fallback to re-encoding if stream copy fails
         """
         duration = end_time - start_time
         
         # Prepare ffmpeg command
+        # Place -ss before -i for faster and more accurate seeking
         cmd = [
             'ffmpeg',
-            '-i', input_path,
             '-ss', str(start_time),
+            '-i', input_path,
             '-t', str(duration),
-            '-avoid_negative_ts', 'make_zero',
             '-y'  # Overwrite output file
         ]
         
@@ -261,8 +270,26 @@ class VideoProcessor:
             if not output_path.endswith(('.mp3', '.aac', '.m4a', '.wav')):
                 output_path = os.path.splitext(output_path)[0] + '.mp3'
         else:
-            # Video with audio
-            cmd.extend(['-c', 'copy'])
+            # For video clips, decide between copy and re-encode based on duration
+            # For short clips (< 60 seconds), use re-encoding for better precision
+            # For longer clips, use stream copy for speed
+            if duration < 60:
+                # Re-encode for precision with short clips
+                cmd.extend([
+                    '-c:v', 'libx264',  # Re-encode video with H.264
+                    '-c:a', 'aac',      # Re-encode audio with AAC
+                    '-preset', 'fast',  # Use fast preset for speed
+                    '-crf', '23',       # Good quality setting
+                    '-movflags', '+faststart'  # Optimize for web playback
+                ])
+            else:
+                # Use stream copy for longer clips (faster)
+                cmd.extend([
+                    '-c', 'copy',
+                    '-avoid_negative_ts', 'make_zero',
+                    '-copyts'  # Copy timestamps to maintain sync
+                ])
+            
             # Ensure output has video extension
             if not output_path.endswith(('.mp4', '.mkv', '.avi')):
                 output_path = os.path.splitext(output_path)[0] + '.mp4'
@@ -271,7 +298,10 @@ class VideoProcessor:
         
         try:
             if progress_callback:
-                progress_callback("Extracting clip with ffmpeg...")
+                if duration < 60:
+                    progress_callback("Extracting clip with ffmpeg (re-encoding for precision)...")
+                else:
+                    progress_callback("Extracting clip with ffmpeg (stream copy for speed)...")
             
             # Run ffmpeg command
             result = subprocess.run(
@@ -287,7 +317,44 @@ class VideoProcessor:
             return output_path
             
         except subprocess.CalledProcessError as e:
-            raise Exception(f"FFmpeg failed: {e.stderr}")
+            # If stream copy fails, try re-encoding as fallback
+            if '-c' in cmd and 'copy' in cmd:
+                if progress_callback:
+                    progress_callback("Stream copy failed, retrying with re-encoding...")
+                
+                # Remove stream copy options and add re-encoding
+                fallback_cmd = [
+                    'ffmpeg',
+                    '-ss', str(start_time),
+                    '-i', input_path,
+                    '-t', str(duration),
+                    '-c:v', 'libx264',
+                    '-c:a', 'aac',
+                    '-preset', 'fast',
+                    '-crf', '23',
+                    '-movflags', '+faststart',
+                    '-y',
+                    output_path
+                ]
+                
+                try:
+                    fallback_result = subprocess.run(
+                        fallback_cmd,
+                        capture_output=True,
+                        text=True,
+                        check=True
+                    )
+                    
+                    if progress_callback:
+                        progress_callback("Clip extraction completed with re-encoding!")
+                    
+                    return output_path
+                    
+                except subprocess.CalledProcessError as fallback_e:
+                    raise Exception(f"FFmpeg failed (both copy and re-encode): {fallback_e.stderr}")
+            else:
+                raise Exception(f"FFmpeg failed: {e.stderr}")
+                
         except FileNotFoundError:
             raise Exception("FFmpeg not found. Please install ffmpeg and ensure it's in your PATH.")
     
