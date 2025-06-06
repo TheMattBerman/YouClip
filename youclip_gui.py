@@ -82,6 +82,19 @@ class WinampStyle:
     PROGRESS_FILL = "#ffaa00"       # Classic orange/yellow progress fill
     PROGRESS_HIGHLIGHT = "#ffcc33"  # Bright progress highlight
     
+    # LED Status Indicators
+    LED_OFF = "#1a1a1a"            # LED off state
+    LED_RED = "#ff0000"            # Red LED (error/stop)
+    LED_GREEN = "#00ff00"          # Green LED (ready/success)
+    LED_ORANGE = "#ff6600"         # Orange LED (downloading/warning)
+    LED_BLUE = "#0066ff"           # Blue LED (info)
+    
+    # Decorative Line Colors for authentic carved metal look
+    GROOVE_LIGHT = "#6a6a6a"       # Light groove highlight
+    GROOVE_DARK = "#1a1a1a"        # Dark groove shadow
+    SEPARATOR_LIGHT = "#555555"     # Separator highlight
+    SEPARATOR_DARK = "#2a2a2a"     # Separator shadow
+    
     # Fonts - Larger, more readable bitmap-style fonts
     FONT_SYSTEM = ("MS Sans Serif", 10, "bold")          # Larger system font
     FONT_MAIN = ("MS Sans Serif", 10, "bold")            # Larger main interface font
@@ -91,6 +104,7 @@ class WinampStyle:
     FONT_BUTTON = ("MS Sans Serif", 10, "bold")          # Larger button text
     FONT_SMALL = ("MS Sans Serif", 9, "bold")            # Larger small text
     FONT_MONO = ("Courier New", 10, "bold")              # Larger monospace
+    FONT_ICONS = ("Wingdings", 12, "normal")             # Font for retro icons
     
     # Spacing and sizing - slightly more spacious for readability
     PADDING_SMALL = 3
@@ -139,6 +153,72 @@ class WinampStyle:
             highlightbackground=WinampStyle.CHROME_DARK,
             highlightthickness=1
         )
+    
+    @staticmethod
+    def create_led_indicator(parent, color=None):
+        """Create a small LED status indicator"""
+        if color is None:
+            color = WinampStyle.LED_OFF
+        
+        led = tk.Frame(
+            parent,
+            bg=color,
+            width=8,
+            height=8,
+            relief="raised",
+            bd=1
+        )
+        led.pack_propagate(False)
+        return led
+    
+    @staticmethod
+    def create_decorative_separator(parent, orientation="horizontal"):
+        """Create decorative beveled separator lines"""
+        if orientation == "horizontal":
+            # Create horizontal separator with carved effect
+            sep_frame = tk.Frame(parent, bg=WinampStyle.BG_PRIMARY, height=2)
+            sep_frame.grid_propagate(False)
+            sep_frame.rowconfigure(0, weight=1)
+            sep_frame.rowconfigure(1, weight=1)
+            sep_frame.columnconfigure(0, weight=1)
+            
+            # Light line (top)
+            light_line = tk.Frame(sep_frame, bg=WinampStyle.GROOVE_LIGHT, height=1)
+            light_line.grid(row=0, column=0, sticky="ew")
+            
+            # Dark line (bottom)
+            dark_line = tk.Frame(sep_frame, bg=WinampStyle.GROOVE_DARK, height=1)
+            dark_line.grid(row=1, column=0, sticky="ew")
+            
+            return sep_frame
+        else:
+            # Create vertical separator with carved effect
+            sep_frame = tk.Frame(parent, bg=WinampStyle.BG_PRIMARY, width=2)
+            sep_frame.grid_propagate(False)
+            sep_frame.rowconfigure(0, weight=1)
+            sep_frame.columnconfigure(0, weight=1)
+            sep_frame.columnconfigure(1, weight=1)
+            
+            # Light line (left)
+            light_line = tk.Frame(sep_frame, bg=WinampStyle.GROOVE_LIGHT, width=1)
+            light_line.grid(row=0, column=0, sticky="ns")
+            
+            # Dark line (right)
+            dark_line = tk.Frame(sep_frame, bg=WinampStyle.GROOVE_DARK, width=1)
+            dark_line.grid(row=0, column=1, sticky="ns")
+            
+            return sep_frame
+    
+    @staticmethod
+    def create_etched_border(widget):
+        """Create etched border effect around panels"""
+        # Add subtle etched border
+        widget.configure(
+            relief="groove",
+            bd=2,
+            highlightbackground=WinampStyle.SEPARATOR_LIGHT,
+            highlightthickness=1
+        )
 
 
 class YouTubeClipGUI:
@@ -161,6 +241,9 @@ class YouTubeClipGUI:
         
         # Setup keyboard shortcuts after widgets are created
         self.setup_keyboard_shortcuts()
+        
+        # Initialize LED status indicators to ready state
+        self.root.after(100, lambda: self.update_status_leds("ready"))
         
         # Start the title scrolling animation
         self.animate_title_scroll()
@@ -230,7 +313,7 @@ class YouTubeClipGUI:
         self.create_bottom_panel(main_frame, row=3)
     
     def create_title_bar(self, parent, row):
-        """Create authentic YouClip-style title bar"""
+        """Create authentic YouClip-style title bar with retro window controls"""
         title_frame = tk.Frame(
             parent,
             bg=WinampStyle.BG_PRIMARY,
@@ -240,97 +323,180 @@ class YouTubeClipGUI:
         title_frame.grid(row=row, column=0, sticky="ew", pady=(0, 2))
         title_frame.columnconfigure(1, weight=1)
         
-        # Left side - YouClip logo area with Winamp blue gradient
+        # Left side - YouClip logo area with Winamp blue gradient and LED indicator
         logo_frame = tk.Frame(
             title_frame,
             bg=WinampStyle.WINAMP_BLUE,
             relief="raised",
-            bd=1
+            bd=2
         )
         logo_frame.grid(row=0, column=0, sticky="w", padx=(2, 4))
         
+        # Add decorative etched border to logo
+        WinampStyle.create_etched_border(logo_frame)
+        
+        logo_frame.rowconfigure(0, weight=1)
+        logo_frame.columnconfigure(0, weight=1)
+        
+        # Container for logo and LED
+        logo_container = tk.Frame(logo_frame, bg=WinampStyle.WINAMP_BLUE)
+        logo_container.grid(row=0, column=0, padx=4, pady=2)
+        logo_container.columnconfigure(1, weight=1)
+        
+        # Status LED indicator
+        self.status_led = WinampStyle.create_led_indicator(logo_container, WinampStyle.LED_GREEN)
+        self.status_led.grid(row=0, column=0, padx=(0, 4))
+        
         # YouClip logo text - Larger and more prominent
         logo_label = tk.Label(
-            logo_frame,
+            logo_container,
             text="YOUCLIP",
             font=("Arial", 11, "bold"),
             fg=WinampStyle.TEXT_WHITE,
             bg=WinampStyle.WINAMP_BLUE
         )
-        logo_label.pack(padx=6, pady=2)
+        logo_label.grid(row=0, column=1, sticky="w")
         
-        # Center - main title
+        # Center - main title with decorative separator
+        title_container = tk.Frame(title_frame, bg=WinampStyle.BG_PRIMARY)
+        title_container.grid(row=0, column=1, sticky="ew", padx=4)
+        title_container.columnconfigure(1, weight=1)
+        
+        # Decorative vertical separator
+        vsep = WinampStyle.create_decorative_separator(title_container, "vertical")
+        vsep.grid(row=0, column=0, sticky="ns", padx=(0, 4))
+        
         title_label = tk.Label(
-            title_frame,
+            title_container,
             text="YouClip v2.1 - YouTube Video Clip Downloader",
             font=WinampStyle.FONT_MAIN,
             fg=WinampStyle.TEXT_PRIMARY,
             bg=WinampStyle.BG_PRIMARY
         )
-        title_label.grid(row=0, column=1, sticky="w", padx=4)
+        title_label.grid(row=0, column=1, sticky="w")
         
-        # Right side - minimize/close buttons (aesthetic only)
-        buttons_frame = tk.Frame(
+        # Right side - retro-style window controls
+        controls_frame = tk.Frame(
             title_frame,
-            bg=WinampStyle.BG_PRIMARY,
-            relief="flat"
+            bg=WinampStyle.BG_SECONDARY,
+            relief="sunken",
+            bd=1
         )
-        buttons_frame.grid(row=0, column=2, sticky="e", padx=2)
+        controls_frame.grid(row=0, column=2, sticky="e", padx=2)
         
-        # Minimize button - Authentic Winamp style
+        controls_frame.columnconfigure(0, weight=1)
+        
+        # Mini equalizer visualization (decorative)
+        eq_frame = tk.Frame(controls_frame, bg=WinampStyle.BG_LCD, width=20, height=16)
+        eq_frame.grid(row=0, column=0, padx=2, pady=1)
+        eq_frame.grid_propagate(False)
+        
+        # Create mini equalizer bars
+        for i in range(3):
+            bar_height = [4, 6, 3][i]  # Varied heights for visual effect
+            bar = tk.Frame(eq_frame, bg=WinampStyle.TEXT_LCD, width=3, height=bar_height)
+            bar.place(x=2 + i*5, y=12 - bar_height)
+        
+        # Minimize button - Tiny retro Windows 98 style
         min_btn = tk.Button(
-            buttons_frame,
-            text="_",
-            font=("Arial", 8, "bold"),
+            controls_frame,
+            text="−",
+            font=("MS Sans Serif", 7, "bold"),
             width=2,
             height=1,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.BUTTON_TEXT,
+            fg=WinampStyle.BUTTON_TEXT_DARK,
             relief="raised",
             bd=1,
             command=self.minimize_window,
-            highlightbackground=WinampStyle.BUTTON_LIGHT,
-            highlightcolor=WinampStyle.BUTTON_LIGHT
+            activebackground=WinampStyle.BUTTON_PRESSED,
+            activeforeground=WinampStyle.BUTTON_TEXT
         )
-        min_btn.pack(side="left", padx=1)
+        min_btn.grid(row=0, column=1, padx=(2, 1))
         
-        # Close button - Authentic Winamp style
+        # Close button - Tiny retro Windows 98 style
         close_btn = tk.Button(
-            buttons_frame,
-            text="X",
-            font=("Arial", 8, "bold"),
+            controls_frame,
+            text="×",
+            font=("MS Sans Serif", 7, "bold"),
             width=2,
             height=1,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.BUTTON_TEXT,
+            fg=WinampStyle.BUTTON_TEXT_DARK,
             relief="raised",
             bd=1,
             command=self.root.quit,
-            highlightbackground=WinampStyle.BUTTON_LIGHT,
-            highlightcolor=WinampStyle.BUTTON_LIGHT
+            activebackground=WinampStyle.TEXT_ERROR,
+            activeforeground=WinampStyle.TEXT_WHITE
         )
-        close_btn.pack(side="left")
+        close_btn.grid(row=0, column=2, padx=1)
+        
+        # Add decorative separator below title bar
+        separator = WinampStyle.create_decorative_separator(parent, "horizontal")
+        separator.grid(row=row+1, column=0, sticky="ew", pady=1)
     
     def create_main_display(self, parent, row):
-        """Create main LCD display area like YouClip's main window"""
+        """Create main LCD display area with enhanced retro styling"""
         display_frame = tk.Frame(
             parent,
             bg=WinampStyle.BG_SECONDARY,
-            relief="sunken",
-            bd=2
+            relief="groove",
+            bd=3
         )
         display_frame.grid(row=row, column=0, sticky="ew", pady=2, padx=2)
         display_frame.columnconfigure(0, weight=1)
         
-        # Main LCD display with enhanced Winamp styling
+        # Add etched border for authentic look
+        WinampStyle.create_etched_border(display_frame)
+        
+        display_frame.rowconfigure(2, weight=1)
+        display_frame.columnconfigure(0, weight=1)
+        
+        # Display title with LED indicator
+        display_title_frame = tk.Frame(display_frame, bg=WinampStyle.BG_SECONDARY)
+        display_title_frame.grid(row=0, column=0, sticky="ew", padx=4, pady=(4, 2))
+        display_title_frame.columnconfigure(0, weight=1)
+        
+        display_title = tk.Label(
+            display_title_frame,
+            text="📺 MAIN DISPLAY",
+            font=WinampStyle.FONT_HEADING,
+            fg=WinampStyle.TEXT_PRIMARY,
+            bg=WinampStyle.BG_SECONDARY
+        )
+        display_title.grid(row=0, column=0, sticky="w")
+        
+        # Display status LED
+        display_led = WinampStyle.create_led_indicator(display_title_frame, WinampStyle.LED_BLUE)
+        display_led.grid(row=0, column=1, sticky="e", padx=4)
+        
+        # Decorative separator below title
+        display_sep = WinampStyle.create_decorative_separator(display_frame, "horizontal")
+        display_sep.grid(row=1, column=0, sticky="ew", padx=2, pady=2)
+        
+        # Main LCD display with enhanced Winamp styling and corner decorations
+        lcd_container = tk.Frame(display_frame, bg=WinampStyle.BG_SECONDARY)
+        lcd_container.grid(row=2, column=0, sticky="ew", padx=4, pady=2)
+        lcd_container.columnconfigure(1, weight=1)
+        
+        # Left decorative corner with groove pattern
+        left_dec = tk.Frame(lcd_container, bg=WinampStyle.BG_DARK, width=8)
+        left_dec.grid(row=0, column=0, sticky="ns", padx=(0, 2))
+        left_dec.pack_propagate(False)
+        
         lcd_frame = tk.Frame(
-            display_frame,
+            lcd_container,
             bg=WinampStyle.BG_LCD,
             relief="sunken",
-            bd=2
+            bd=3
         )
-        lcd_frame.grid(row=0, column=0, sticky="ew", padx=4, pady=4)
+        lcd_frame.grid(row=0, column=1, sticky="ew")
         lcd_frame.columnconfigure(0, weight=1)
+        
+        # Right decorative corner with groove pattern
+        right_dec = tk.Frame(lcd_container, bg=WinampStyle.BG_DARK, width=8)
+        right_dec.grid(row=0, column=2, sticky="ns", padx=(2, 0))
+        right_dec.pack_propagate(False)
         
         # Create URL input section within LCD
         self.create_url_section(lcd_frame, row=0)
@@ -339,7 +505,7 @@ class YouTubeClipGUI:
         self.create_video_info_section(lcd_frame, row=1)
     
     def create_control_panels(self, parent, row):
-        """Create control panels section"""
+        """Create control panels section with enhanced decorative elements"""
         controls_frame = tk.Frame(
             parent,
             bg=WinampStyle.BG_PRIMARY,
@@ -347,35 +513,108 @@ class YouTubeClipGUI:
         )
         controls_frame.grid(row=row, column=0, sticky="ew", pady=2, padx=2)
         controls_frame.columnconfigure(0, weight=1)
-        controls_frame.columnconfigure(1, weight=1)
+        controls_frame.columnconfigure(1, weight=0)  # Separator column
+        controls_frame.columnconfigure(2, weight=0)  # Separator frame column  
+        controls_frame.columnconfigure(3, weight=1)  # Right panel column
         
-        # Left panel - Time controls
+        # Left panel - Time controls with enhanced styling
         left_panel = tk.Frame(
             controls_frame,
             bg=WinampStyle.BG_SECONDARY,
-            relief="sunken",
-            bd=2
+            relief="groove",
+            bd=3
         )
-        left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 1))
+        left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 2))
         
-        self.create_time_section(left_panel, row=0)
+        # Add etched border and decorative corner details
+        WinampStyle.create_etched_border(left_panel)
         
-        # Right panel - Output controls
+        left_panel.rowconfigure(2, weight=1)
+        left_panel.columnconfigure(0, weight=1)
+        
+        # Add panel title with decorative separator
+        time_title_frame = tk.Frame(left_panel, bg=WinampStyle.BG_SECONDARY)
+        time_title_frame.grid(row=0, column=0, sticky="ew", padx=4, pady=(4, 2))
+        time_title_frame.columnconfigure(0, weight=1)
+        
+        time_title = tk.Label(
+            time_title_frame,
+            text="⏱ TIME CONTROLS",
+            font=WinampStyle.FONT_HEADING,
+            fg=WinampStyle.TEXT_PRIMARY,
+            bg=WinampStyle.BG_SECONDARY
+        )
+        time_title.grid(row=0, column=0, sticky="w")
+        
+        # Add small LED status indicator for time section
+        time_led = WinampStyle.create_led_indicator(time_title_frame, WinampStyle.LED_BLUE)
+        time_led.grid(row=0, column=1, sticky="e", padx=4)
+        
+        # Decorative separator below title
+        time_sep = WinampStyle.create_decorative_separator(left_panel, "horizontal")
+        time_sep.grid(row=1, column=0, sticky="ew", padx=2, pady=2)
+        
+        self.create_time_section(left_panel, row=2)
+        
+        # Central vertical separator with decorative grooves
+        center_sep_frame = tk.Frame(controls_frame, bg=WinampStyle.BG_PRIMARY, width=6)
+        center_sep_frame.grid(row=0, column=2, sticky="ns", padx=2)
+        center_sep_frame.grid_propagate(False)
+        center_sep_frame.rowconfigure(0, weight=1)
+        center_sep_frame.columnconfigure(0, weight=1)
+        
+        # Create decorative groove pattern
+        vsep_main = WinampStyle.create_decorative_separator(center_sep_frame, "vertical")
+        vsep_main.grid(row=0, column=0, sticky="ns", padx=2)
+        
+        # Right panel - Output controls with enhanced styling
         right_panel = tk.Frame(
             controls_frame,
             bg=WinampStyle.BG_SECONDARY,
-            relief="sunken",
-            bd=2
+            relief="groove",
+            bd=3
         )
-        right_panel.grid(row=0, column=1, sticky="nsew", padx=(1, 0))
+        right_panel.grid(row=0, column=3, sticky="nsew", padx=(2, 0))
         
-        self.create_output_section(right_panel, row=0)
+        # Add etched border and decorative corner details
+        WinampStyle.create_etched_border(right_panel)
+        
+        right_panel.rowconfigure(2, weight=1)
+        right_panel.columnconfigure(0, weight=1)
+        
+        # Add panel title with decorative separator
+        output_title_frame = tk.Frame(right_panel, bg=WinampStyle.BG_SECONDARY)
+        output_title_frame.grid(row=0, column=0, sticky="ew", padx=4, pady=(4, 2))
+        output_title_frame.columnconfigure(0, weight=1)
+        
+        output_title = tk.Label(
+            output_title_frame,
+            text="💾 OUTPUT SETTINGS",
+            font=WinampStyle.FONT_HEADING,
+            fg=WinampStyle.TEXT_PRIMARY,
+            bg=WinampStyle.BG_SECONDARY
+        )
+        output_title.grid(row=0, column=0, sticky="w")
+        
+        # Add small LED status indicator for output section
+        output_led = WinampStyle.create_led_indicator(output_title_frame, WinampStyle.LED_BLUE)
+        output_led.grid(row=0, column=1, sticky="e", padx=4)
+        
+        # Decorative separator below title
+        output_sep = WinampStyle.create_decorative_separator(right_panel, "horizontal")
+        output_sep.grid(row=1, column=0, sticky="ew", padx=2, pady=2)
+        
+        self.create_output_section(right_panel, row=2)
+        
+        # Decorative separator between panels and buttons
+        main_sep = WinampStyle.create_decorative_separator(controls_frame, "horizontal")
+        main_sep.grid(row=1, column=0, columnspan=4, sticky="ew", pady=4)
         
         # Action buttons below panels
-        self.create_action_buttons(controls_frame, row=1)
+        self.create_action_buttons(controls_frame, row=2)
         
         # Progress section
-        self.create_progress_section(controls_frame, row=2)
+        self.create_progress_section(controls_frame, row=3)
     
     def create_bottom_panel(self, parent, row):
         """Create bottom status panel"""
@@ -384,6 +623,41 @@ class YouTubeClipGUI:
     def minimize_window(self):
         """Minimize window"""
         self.root.iconify()
+    
+    def update_led_status(self, led_widget, color):
+        """Update LED indicator color"""
+        led_widget.configure(bg=color)
+    
+    def update_status_leds(self, status="ready"):
+        """Update all LED indicators based on application status"""
+        if status == "ready":
+            self.update_led_status(self.status_led, WinampStyle.LED_GREEN)
+            self.update_led_status(self.download_led, WinampStyle.LED_OFF)
+            self.update_led_status(self.cancel_led, WinampStyle.LED_OFF)
+            self.update_led_status(self.clear_led, WinampStyle.LED_OFF)
+            if hasattr(self, 'progress_led'):
+                self.update_led_status(self.progress_led, WinampStyle.LED_OFF)
+        elif status == "downloading":
+            self.update_led_status(self.status_led, WinampStyle.LED_ORANGE)
+            self.update_led_status(self.download_led, WinampStyle.LED_ORANGE)
+            self.update_led_status(self.cancel_led, WinampStyle.LED_GREEN)
+            self.update_led_status(self.clear_led, WinampStyle.LED_OFF)
+            if hasattr(self, 'progress_led'):
+                self.update_led_status(self.progress_led, WinampStyle.LED_ORANGE)
+        elif status == "error":
+            self.update_led_status(self.status_led, WinampStyle.LED_RED)
+            self.update_led_status(self.download_led, WinampStyle.LED_OFF)
+            self.update_led_status(self.cancel_led, WinampStyle.LED_OFF)
+            self.update_led_status(self.clear_led, WinampStyle.LED_GREEN)
+            if hasattr(self, 'progress_led'):
+                self.update_led_status(self.progress_led, WinampStyle.LED_RED)
+        elif status == "complete":
+            self.update_led_status(self.status_led, WinampStyle.LED_GREEN)
+            self.update_led_status(self.download_led, WinampStyle.LED_OFF)
+            self.update_led_status(self.cancel_led, WinampStyle.LED_OFF)
+            self.update_led_status(self.clear_led, WinampStyle.LED_BLUE)
+            if hasattr(self, 'progress_led'):
+                self.update_led_status(self.progress_led, WinampStyle.LED_GREEN)
     
     def create_url_section(self, parent, row):
         """Create URL input section - Authentic LCD style"""
@@ -634,6 +908,9 @@ class YouTubeClipGUI:
         type_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY)
         type_frame.grid(row=1, column=0, sticky="ew", padx=4, pady=2)
         
+        type_frame.columnconfigure(0, weight=1)
+        type_frame.columnconfigure(1, weight=1)
+        
         self.output_type_var = tk.StringVar(value="video")
         
         tk.Radiobutton(
@@ -645,7 +922,7 @@ class YouTubeClipGUI:
             bg=WinampStyle.BG_SECONDARY,
             fg=WinampStyle.TEXT_PRIMARY,
             selectcolor=WinampStyle.BG_ACCENT
-        ).pack(side="left", padx=(2, 10))
+        ).grid(row=0, column=0, sticky="w", padx=(2, 10))
         
         tk.Radiobutton(
             type_frame,
@@ -656,7 +933,7 @@ class YouTubeClipGUI:
             bg=WinampStyle.BG_SECONDARY,
             fg=WinampStyle.TEXT_PRIMARY,
             selectcolor=WinampStyle.BG_ACCENT
-        ).pack(side="left")
+        ).grid(row=0, column=1, sticky="w")
         
         # Filename input
         filename_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY)
@@ -713,51 +990,89 @@ class YouTubeClipGUI:
         auto_check.grid(row=3, column=0, sticky="w", pady=(2, 4), padx=4)
     
     def create_action_buttons(self, parent, row):
-        """Create main action buttons - Authentic YouClip style with enhanced polish"""
+        """Create main action buttons with retro icons - Authentic YouClip style"""
         button_frame = tk.Frame(parent, bg=WinampStyle.BG_PRIMARY)
         button_frame.grid(row=row, column=0, sticky="ew", pady=4, padx=2)
         
+        button_frame.rowconfigure(1, weight=1)
+        button_frame.columnconfigure(0, weight=1)
+        
+        # Add decorative separator above buttons
+        sep_above = WinampStyle.create_decorative_separator(button_frame, "horizontal")
+        sep_above.grid(row=0, column=0, sticky="ew", pady=(0, 2))
+        
         # Create classic Winamp-style transport buttons with authentic metallic chrome styling
         transport_frame = tk.Frame(button_frame, bg=WinampStyle.BG_SECONDARY, relief="sunken", bd=2)
-        transport_frame.pack(fill="x", padx=1, pady=1)
+        transport_frame.grid(row=1, column=0, sticky="ew", padx=1, pady=1)
+        transport_frame.rowconfigure(0, weight=1)
+        transport_frame.columnconfigure(0, weight=1)
+        
+        # Add etched border to transport frame
+        WinampStyle.create_etched_border(transport_frame)
         
         # Center the buttons with chrome background
         button_container = tk.Frame(transport_frame, bg=WinampStyle.BG_SECONDARY)
-        button_container.pack(expand=True, pady=2)
+        button_container.grid(row=0, column=0, pady=4)
         
-        # Download button (play button style) - Compact Winamp styling
+        button_container.columnconfigure(0, weight=1)
+        button_container.columnconfigure(2, weight=1)
+        button_container.columnconfigure(4, weight=1)
+        
+        # Download button with play icon - Compact Winamp styling
+        download_frame = tk.Frame(button_container, bg=WinampStyle.BG_SECONDARY)
+        download_frame.grid(row=0, column=0, padx=2)
+        download_frame.rowconfigure(1, weight=1)
+        download_frame.columnconfigure(0, weight=1)
+        
+        # LED indicator for download button
+        self.download_led = WinampStyle.create_led_indicator(download_frame, WinampStyle.LED_OFF)
+        self.download_led.grid(row=0, column=0, pady=(0, 2))
+        
         self.download_btn = tk.Button(
-            button_container,
-            text="DOWNLOAD",
+            download_frame,
+            text="▶ DOWNLOAD",  # Play icon + text
             command=self.start_download,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
             fg=WinampStyle.BUTTON_TEXT_DARK,
             relief="raised",
-            bd=2,
-            width=14,
+            bd=3,
+            width=16,
             height=2,
             activebackground=WinampStyle.ACCENT_ORANGE,
             activeforeground=WinampStyle.TEXT_WHITE,
             cursor="hand2"
         )
-        self.download_btn.pack(side="left", padx=1)
+        self.download_btn.grid(row=1, column=0)
         
         # Add authentic Winamp hover effects
         self.download_btn.bind("<Enter>", lambda e: self.download_btn.configure(bg=WinampStyle.ACCENT_ORANGE, fg=WinampStyle.TEXT_WHITE))
         self.download_btn.bind("<Leave>", lambda e: self.download_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT_DARK))
         
-        # Cancel button (stop button style) - Compact Winamp styling
+        # Vertical separator between buttons
+        vsep1 = WinampStyle.create_decorative_separator(button_container, "vertical")
+        vsep1.grid(row=0, column=1, rowspan=2, sticky="ns", padx=2)
+        
+        # Cancel button with stop icon - Compact Winamp styling
+        cancel_frame = tk.Frame(button_container, bg=WinampStyle.BG_SECONDARY)
+        cancel_frame.grid(row=0, column=2, padx=2)
+        cancel_frame.rowconfigure(1, weight=1)
+        cancel_frame.columnconfigure(0, weight=1)
+        
+        # LED indicator for cancel button
+        self.cancel_led = WinampStyle.create_led_indicator(cancel_frame, WinampStyle.LED_OFF)
+        self.cancel_led.grid(row=0, column=0, pady=(0, 2))
+        
         self.cancel_btn = tk.Button(
-            button_container,
-            text="STOP",
+            cancel_frame,
+            text="⏹ STOP",  # Stop icon + text
             command=self.cancel_download,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
             fg=WinampStyle.BUTTON_TEXT,
             relief="raised",
-            bd=2,
-            width=10,
+            bd=3,
+            width=12,
             height=2,
             state="disabled",
             activebackground=WinampStyle.TEXT_ERROR,
@@ -765,112 +1080,225 @@ class YouTubeClipGUI:
             cursor="hand2",
             disabledforeground=WinampStyle.TEXT_SECONDARY
         )
-        self.cancel_btn.pack(side="left", padx=1)
+        self.cancel_btn.grid(row=1, column=0)
         
-        # Clear button (reset button style) - Compact Winamp styling
+        # Vertical separator between buttons
+        vsep2 = WinampStyle.create_decorative_separator(button_container, "vertical")
+        vsep2.grid(row=0, column=3, rowspan=2, sticky="ns", padx=2)
+        
+        # Clear button with refresh/trash icon - Compact Winamp styling
+        clear_frame = tk.Frame(button_container, bg=WinampStyle.BG_SECONDARY)
+        clear_frame.grid(row=0, column=4, padx=2)
+        clear_frame.rowconfigure(1, weight=1)
+        clear_frame.columnconfigure(0, weight=1)
+        
+        # LED indicator for clear button
+        self.clear_led = WinampStyle.create_led_indicator(clear_frame, WinampStyle.LED_OFF)
+        self.clear_led.grid(row=0, column=0, pady=(0, 2))
+        
         clear_btn = tk.Button(
-            button_container,
-            text="CLEAR",
+            clear_frame,
+            text="↻ CLEAR",  # Refresh icon + text
             command=self.clear_all,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
             fg=WinampStyle.BUTTON_TEXT_DARK,
             relief="raised",
-            bd=2,
-            width=10,
+            bd=3,
+            width=12,
             height=2,
             activebackground=WinampStyle.TEXT_WARNING,
             activeforeground=WinampStyle.TEXT_WHITE,
             cursor="hand2"
         )
-        clear_btn.pack(side="left", padx=1)
+        clear_btn.grid(row=1, column=0)
         
         # Add authentic Winamp hover effects for clear button
         clear_btn.bind("<Enter>", lambda e: clear_btn.configure(bg=WinampStyle.TEXT_WARNING, fg=WinampStyle.TEXT_WHITE))
         clear_btn.bind("<Leave>", lambda e: clear_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT_DARK))
+        
+        # Add decorative separator below buttons
+        sep_below = WinampStyle.create_decorative_separator(button_frame, "horizontal")
+        sep_below.grid(row=2, column=0, sticky="ew", pady=(2, 0))
     
     def create_progress_section(self, parent, row):
-        """Create progress tracking section - Enhanced YouClip style"""
+        """Create progress tracking section with enhanced retro styling"""
         self.progress_frame = tk.Frame(parent, bg=WinampStyle.BG_PRIMARY)
-        self.progress_frame.grid(row=row, column=0, sticky="ew", pady=2, padx=2)
+        self.progress_frame.grid(row=row, column=0, columnspan=4, sticky="ew", pady=2, padx=2)
         self.progress_frame.columnconfigure(0, weight=1)
         
         # Initially hidden
         self.progress_frame.grid_remove()
         
-        # Progress display area with enhanced styling
+        self.progress_frame.rowconfigure(0, weight=1)
+        self.progress_frame.columnconfigure(0, weight=1)
+        
+        # Progress display area with enhanced styling and etched borders
         progress_display = tk.Frame(
             self.progress_frame,
             bg=WinampStyle.BG_SECONDARY,
-            relief="sunken",
-            bd=2
+            relief="groove",
+            bd=3
         )
-        progress_display.pack(fill="x", padx=2, pady=2)
-        progress_display.columnconfigure(0, weight=1)
+        progress_display.grid(row=0, column=0, sticky="ew", padx=2, pady=2)
+        progress_display.columnconfigure(1, weight=1)
         
-        # Progress bar - Classic Winamp orange/yellow seek bar style
+        # Add etched border effect
+        WinampStyle.create_etched_border(progress_display)
+        
+        # Progress section title with LED indicator
+        progress_title_frame = tk.Frame(progress_display, bg=WinampStyle.BG_SECONDARY)
+        progress_title_frame.grid(row=0, column=0, columnspan=3, sticky="ew", padx=4, pady=(4, 2))
+        progress_title_frame.columnconfigure(0, weight=1)
+        
+        progress_title = tk.Label(
+            progress_title_frame,
+            text="📊 DOWNLOAD PROGRESS",
+            font=WinampStyle.FONT_HEADING,
+            fg=WinampStyle.TEXT_PRIMARY,
+            bg=WinampStyle.BG_SECONDARY
+        )
+        progress_title.grid(row=0, column=0, sticky="w")
+        
+        # Progress LED indicator
+        self.progress_led = WinampStyle.create_led_indicator(progress_title_frame, WinampStyle.LED_OFF)
+        self.progress_led.grid(row=0, column=1, sticky="e", padx=4)
+        
+        # Decorative separator below title
+        progress_title_sep = WinampStyle.create_decorative_separator(progress_display, "horizontal")
+        progress_title_sep.grid(row=1, column=0, columnspan=3, sticky="ew", padx=2, pady=2)
+        
+        # Left decorative corner
+        left_corner = tk.Frame(progress_display, bg=WinampStyle.BG_DARK, width=8, height=20)
+        left_corner.grid(row=2, column=0, sticky="ns", padx=2)
+        left_corner.pack_propagate(False)
+        
+        # Progress bar - Classic Winamp orange/yellow seek bar style with enhanced 3D effect
+        progress_container = tk.Frame(progress_display, bg=WinampStyle.BG_SECONDARY)
+        progress_container.grid(row=2, column=1, sticky="ew", pady=4, padx=2)
+        progress_container.columnconfigure(0, weight=1)
+        
         self.progress_var = tk.DoubleVar()
         self.progress_bar = tk.Frame(
-            progress_display,
+            progress_container,
             bg=WinampStyle.PROGRESS_BG,
             relief="sunken",
-            bd=1,
-            height=12
+            bd=2,
+            height=16
         )
-        self.progress_bar.grid(row=0, column=0, sticky="ew", pady=2, padx=2)
+        self.progress_bar.grid(row=0, column=0, sticky="ew", pady=2)
         
-        # Create the actual progress fill bar
+        # Create the actual progress fill bar with 3D highlight effect
         self.progress_fill = tk.Frame(
             self.progress_bar,
             bg=WinampStyle.PROGRESS_FILL,
-            height=8
+            height=12
         )
-        self.progress_fill.place(x=2, y=2, width=0, height=8)
+        self.progress_fill.place(x=2, y=2, width=0, height=12)
         
-        # Progress status with compact LCD display
+        # Add progress highlight bar for authentic Winamp look
+        self.progress_highlight = tk.Frame(
+            self.progress_fill,
+            bg=WinampStyle.PROGRESS_HIGHLIGHT,
+            height=4
+        )
+        self.progress_highlight.place(x=0, y=0, relwidth=1, height=4)
+        
+        # Right decorative corner
+        right_corner = tk.Frame(progress_display, bg=WinampStyle.BG_DARK, width=8, height=20)
+        right_corner.grid(row=2, column=2, sticky="ns", padx=2)
+        right_corner.pack_propagate(False)
+        
+        # Progress status with compact LCD display and enhanced styling
+        status_container = tk.Frame(progress_display, bg=WinampStyle.BG_SECONDARY)
+        status_container.grid(row=3, column=0, columnspan=3, sticky="ew", padx=4, pady=2)
+        status_container.columnconfigure(0, weight=1)
+        
         self.progress_status_var = tk.StringVar()
         self.progress_status_label = tk.Label(
-            progress_display,
+            status_container,
             textvariable=self.progress_status_var,
             font=WinampStyle.FONT_LCD,
             bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
             anchor="w",
-            relief="flat",
-            bd=0
+            relief="sunken",
+            bd=2
         )
-        self.progress_status_label.grid(row=1, column=0, sticky="ew", padx=2, pady=(1, 2))
+        self.progress_status_label.grid(row=0, column=0, sticky="ew", pady=2)
     
     def create_status_section(self, parent, row):
-        """Create status/log section - Enhanced YouClip style"""
-        status_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="sunken", bd=2)
+        """Create status/log section with enhanced retro styling"""
+        status_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY, relief="groove", bd=3)
         status_frame.grid(row=row, column=0, sticky="nsew", pady=2, padx=2)
         status_frame.columnconfigure(0, weight=1)
-        status_frame.rowconfigure(0, weight=1)
+        status_frame.rowconfigure(1, weight=1)
         
         # Configure main frame to expand this section
         parent.rowconfigure(row, weight=1)
         
-        # Status text area with compact Winamp styling
+        # Add etched border
+        WinampStyle.create_etched_border(status_frame)
+        
+        # Status section title with LED indicator
+        status_title_frame = tk.Frame(status_frame, bg=WinampStyle.BG_SECONDARY)
+        status_title_frame.grid(row=0, column=0, sticky="ew", padx=4, pady=(4, 2))
+        status_title_frame.columnconfigure(0, weight=1)
+        
+        status_title = tk.Label(
+            status_title_frame,
+            text="📝 SYSTEM LOG",
+            font=WinampStyle.FONT_HEADING,
+            fg=WinampStyle.TEXT_PRIMARY,
+            bg=WinampStyle.BG_SECONDARY
+        )
+        status_title.grid(row=0, column=0, sticky="w")
+        
+        # Status LED indicator
+        status_log_led = WinampStyle.create_led_indicator(status_title_frame, WinampStyle.LED_GREEN)
+        status_log_led.grid(row=0, column=1, sticky="e", padx=4)
+        
+        # Decorative separator below title
+        status_sep = WinampStyle.create_decorative_separator(status_frame, "horizontal")
+        status_sep.grid(row=1, column=0, sticky="ew", padx=2, pady=2)
+        
+        # Status text container with corner decorations
+        status_container = tk.Frame(status_frame, bg=WinampStyle.BG_SECONDARY)
+        status_container.grid(row=2, column=0, sticky="nsew", padx=4, pady=2)
+        status_container.columnconfigure(1, weight=1)
+        status_container.rowconfigure(0, weight=1)
+        
+        # Left decorative corner
+        left_status_corner = tk.Frame(status_container, bg=WinampStyle.BG_DARK, width=6)
+        left_status_corner.grid(row=0, column=0, sticky="ns", padx=(0, 2))
+        left_status_corner.pack_propagate(False)
+        
+        # Status text area with compact Winamp styling and enhanced 3D borders
         self.status_text = scrolledtext.ScrolledText(
-            status_frame,
+            status_container,
             height=5,
             wrap=tk.WORD,
             font=WinampStyle.FONT_LCD,
             bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
-            relief="flat",
-            bd=0,
+            relief="sunken",
+            bd=2,
             insertbackground=WinampStyle.TEXT_LCD,
             selectbackground=WinampStyle.ACCENT_ORANGE,
             selectforeground=WinampStyle.BG_LCD,
             state=tk.DISABLED
         )
-        self.status_text.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+        self.status_text.grid(row=0, column=1, sticky="nsew")
+        
+        # Right decorative corner
+        right_status_corner = tk.Frame(status_container, bg=WinampStyle.BG_DARK, width=6)
+        right_status_corner.grid(row=0, column=2, sticky="ns", padx=(2, 0))
+        right_status_corner.pack_propagate(False)
         
         # Add initial message with authentic Winamp styling
-        self.log_message("YouClip v2.1 Ready", "info")
-        self.log_message("Enter YouTube URL to begin", "info")
+        self.log_message("YouClip v2.1 Ready - All Systems Online", "info")
+        self.log_message("Enter YouTube URL to begin clip extraction", "info")
+        self.log_message("Ready for input...", "info")
     
     def setup_styles(self):
         """Configure custom dark Winamp-inspired styles"""
@@ -1183,6 +1611,9 @@ class YouTubeClipGUI:
         # Update window title to show download in progress
         self.root.title("YouClip v2.1 - [Downloading...] - Winamp")
         
+        # Update LED status indicators
+        self.update_status_leds("downloading")
+        
         # Show progress
         self.show_progress("Preparing download...")
         
@@ -1227,13 +1658,16 @@ class YouTubeClipGUI:
     def download_complete(self, result_path):
         """Handle download completion"""
         # Reset UI state
-        self.download_btn.configure(state="normal", text="► DOWNLOAD")
+        self.download_btn.configure(state="normal", text="▶ DOWNLOAD")
         self.cancel_btn.configure(state="disabled")
         self.hide_progress()
         
         if result_path and os.path.exists(result_path):
             # Update window title to show completion
             self.root.title("YouClip v2.1 - [Complete] - Winamp")
+            
+            # Update LED status indicators for success
+            self.update_status_leds("complete")
             
             self.log_message(f"Download completed: {result_path}", "success")
             
@@ -1248,6 +1682,10 @@ class YouTubeClipGUI:
                 self.open_file_location(result_path)
         else:
             self.root.title("YouClip v2.1 - [Error] - Winamp")
+            
+            # Update LED status indicators for error
+            self.update_status_leds("error")
+            
             self.log_message("Download failed!", "error")
             messagebox.showerror("Download Error", "Download failed. Check the status log for details.")
     
@@ -1261,8 +1699,11 @@ class YouTubeClipGUI:
             # Update window title
             self.root.title("YouClip v2.1 - [Stopped] - Winamp")
             
+            # Update LED status indicators back to ready state
+            self.update_status_leds("ready")
+            
             # Reset UI state
-            self.download_btn.configure(state="normal", text="► DOWNLOAD")
+            self.download_btn.configure(state="normal", text="▶ DOWNLOAD")
             self.cancel_btn.configure(state="disabled")
             self.hide_progress()
     
@@ -1321,6 +1762,9 @@ class YouTubeClipGUI:
         
         # Reset buttons
         self.preview_btn.configure(state="disabled")
+        
+        # Reset LED indicators to ready state
+        self.update_status_leds("ready")
         
         self.log_message("All fields cleared", "info")
     
@@ -1381,8 +1825,11 @@ class YouTubeClipGUI:
     def handle_error(self, error_message):
         """Handle and display errors"""
         self.hide_progress()
-        self.download_btn.configure(state="normal")
+        self.download_btn.configure(state="normal", text="▶ DOWNLOAD")
         self.cancel_btn.configure(state="disabled")
+        
+        # Update LED status indicators for error state
+        self.update_status_leds("error")
         
         messagebox.showerror("Error", error_message)
         self.log_message(error_message, "error")
