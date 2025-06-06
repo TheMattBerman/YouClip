@@ -45,12 +45,13 @@ class WinampStyle:
     CHROME_DARK = "#2a2a2a"         # Deep shadow
     CHROME_DARKEST = "#1a1a1a"      # Darkest shadow
     
-    # Classic button colors - Winamp style
-    BUTTON_FACE = "#4a4a4a"         # Button face
-    BUTTON_LIGHT = "#6a6a6a"        # Button highlight
-    BUTTON_SHADOW = "#2a2a2a"       # Button shadow
-    BUTTON_DARK_SHADOW = "#1a1a1a"  # Button dark shadow
-    BUTTON_PRESSED = "#3a3a3a"      # Pressed button
+    # Classic button colors - Authentic Winamp style with better contrast
+    BUTTON_FACE = "#c0c0c0"         # Light button face like Winamp
+    BUTTON_LIGHT = "#ffffff"        # Button highlight
+    BUTTON_SHADOW = "#808080"       # Button shadow
+    BUTTON_DARK_SHADOW = "#404040"  # Button dark shadow
+    BUTTON_PRESSED = "#a0a0a0"      # Pressed button
+    BUTTON_TEXT = "#000000"         # Black text on light buttons
     
     # YouClip Orange accent - the classic Winamp color
     ACCENT_ORANGE = "#ff6600"       # Classic Winamp orange
@@ -75,14 +76,14 @@ class WinampStyle:
     FRAME_SHADOW = "#2a2a2a"        # Bottom/right shadow
     FRAME_DARK_SHADOW = "#1a1a1a"   # Deep shadow
     
-    # Fonts - Authentic early 2000s style with larger, more readable sizes
-    FONT_SYSTEM = ("MS Sans Serif", 10)          # Classic Windows system font
-    FONT_MAIN = ("MS Sans Serif", 10)            # Main interface font
-    FONT_HEADING = ("MS Sans Serif", 11, "bold") # Section headings
-    FONT_LCD = ("Fixedsys", 13, "bold")         # LCD displays (fixed-width)
-    FONT_TITLE = ("MS Sans Serif", 14, "bold")  # Main title
-    FONT_BUTTON = ("MS Sans Serif", 10)          # Button text
-    FONT_SMALL = ("MS Sans Serif", 9)           # Small text
+    # Fonts - Authentic early 2000s style with much larger, more readable sizes
+    FONT_SYSTEM = ("MS Sans Serif", 12)          # Classic Windows system font
+    FONT_MAIN = ("MS Sans Serif", 12)            # Main interface font
+    FONT_HEADING = ("MS Sans Serif", 13, "bold") # Section headings
+    FONT_LCD = ("Fixedsys", 16, "bold")         # LCD displays (fixed-width)
+    FONT_TITLE = ("MS Sans Serif", 16, "bold")  # Main title
+    FONT_BUTTON = ("MS Sans Serif", 11, "bold")  # Button text
+    FONT_SMALL = ("MS Sans Serif", 11)           # Small text
     
     # Spacing and sizing - compact like original Winamp
     PADDING_SMALL = 2
@@ -241,15 +242,15 @@ class YouTubeClipGUI:
         )
         logo_frame.grid(row=0, column=0, sticky="w", padx=(2, 4))
         
-        # YouClip logo text
+        # YouClip logo text - Larger and more prominent
         logo_label = tk.Label(
             logo_frame,
             text="YOUCLIP",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 11, "bold"),
             fg=WinampStyle.TEXT_WHITE,
             bg=WinampStyle.WINAMP_BLUE
         )
-        logo_label.pack(padx=4, pady=1)
+        logo_label.pack(padx=6, pady=2)
         
         # Center - main title
         title_label = tk.Label(
@@ -269,33 +270,37 @@ class YouTubeClipGUI:
         )
         buttons_frame.grid(row=0, column=2, sticky="e", padx=2)
         
-        # Minimize button
+        # Minimize button - Authentic Winamp style
         min_btn = tk.Button(
             buttons_frame,
             text="_",
-            font=("Arial", 6, "bold"),
+            font=("Arial", 8, "bold"),
             width=2,
             height=1,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.TEXT_PRIMARY,
+            fg=WinampStyle.BUTTON_TEXT,
             relief="raised",
             bd=1,
-            command=self.minimize_window
+            command=self.minimize_window,
+            highlightbackground=WinampStyle.BUTTON_LIGHT,
+            highlightcolor=WinampStyle.BUTTON_LIGHT
         )
         min_btn.pack(side="left", padx=1)
         
-        # Close button
+        # Close button - Authentic Winamp style
         close_btn = tk.Button(
             buttons_frame,
             text="X",
-            font=("Arial", 6, "bold"),
+            font=("Arial", 8, "bold"),
             width=2,
             height=1,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.TEXT_PRIMARY,
+            fg=WinampStyle.BUTTON_TEXT,
             relief="raised",
             bd=1,
-            command=self.root.quit
+            command=self.root.quit,
+            highlightbackground=WinampStyle.BUTTON_LIGHT,
+            highlightcolor=WinampStyle.BUTTON_LIGHT
         )
         close_btn.pack(side="left")
     
@@ -410,33 +415,36 @@ class YouTubeClipGUI:
         self.url_entry.grid(row=0, column=1, sticky="ew", padx=(0, 2), pady=2)
         self.url_entry.bind('<KeyRelease>', self.on_url_change)
         
-        # Preview button (compact, like YouClip buttons) - Enhanced
+        # Preview button (compact, like YouClip buttons) - Authentic Winamp styling
         self.preview_btn = tk.Button(
             url_frame,
             text="►",
             command=self.preview_video,
             width=3,
             height=1,
-            font=("Arial", 10, "bold"),
+            font=("Arial", 12, "bold"),
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.TEXT_PRIMARY,
+            fg=WinampStyle.BUTTON_TEXT,
             relief="raised",
             bd=2,
             state="disabled",
             activebackground=WinampStyle.ACCENT_ORANGE,
             activeforeground=WinampStyle.TEXT_WHITE,
-            cursor="hand2"
+            cursor="hand2",
+            highlightbackground=WinampStyle.BUTTON_LIGHT,
+            highlightcolor=WinampStyle.BUTTON_LIGHT,
+            disabledforeground=WinampStyle.BUTTON_SHADOW
         )
         self.preview_btn.grid(row=0, column=2, sticky="e", padx=2)
         
-        # Add hover effects for preview button
+        # Add authentic Winamp hover effects for preview button
         def on_preview_enter(e):
             if self.preview_btn['state'] == 'normal':
-                self.preview_btn.configure(bg=WinampStyle.ACCENT_ORANGE)
+                self.preview_btn.configure(bg=WinampStyle.ACCENT_ORANGE, fg=WinampStyle.TEXT_WHITE)
         
         def on_preview_leave(e):
             if self.preview_btn['state'] == 'normal':
-                self.preview_btn.configure(bg=WinampStyle.BUTTON_FACE)
+                self.preview_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT)
         
         self.preview_btn.bind("<Enter>", on_preview_enter)
         self.preview_btn.bind("<Leave>", on_preview_leave)
@@ -668,18 +676,20 @@ class YouTubeClipGUI:
             width=3,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.TEXT_PRIMARY,
+            fg=WinampStyle.BUTTON_TEXT,
             relief="raised",
             bd=2,
             activebackground=WinampStyle.ACCENT_ORANGE,
             activeforeground=WinampStyle.TEXT_WHITE,
-            cursor="hand2"
+            cursor="hand2",
+            highlightbackground=WinampStyle.BUTTON_LIGHT,
+            highlightcolor=WinampStyle.BUTTON_LIGHT
         )
         self.browse_btn.grid(row=0, column=1, padx=2)
         
-        # Add hover effects for browse button
-        self.browse_btn.bind("<Enter>", lambda e: self.browse_btn.configure(bg=WinampStyle.ACCENT_ORANGE))
-        self.browse_btn.bind("<Leave>", lambda e: self.browse_btn.configure(bg=WinampStyle.BUTTON_FACE))
+        # Add authentic Winamp hover effects for browse button
+        self.browse_btn.bind("<Enter>", lambda e: self.browse_btn.configure(bg=WinampStyle.ACCENT_ORANGE, fg=WinampStyle.TEXT_WHITE))
+        self.browse_btn.bind("<Leave>", lambda e: self.browse_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT))
         
         # Auto-generate checkbox
         self.auto_filename_var = tk.BooleanVar(value=True)
@@ -708,68 +718,75 @@ class YouTubeClipGUI:
         button_container = tk.Frame(transport_frame, bg=WinampStyle.CHROME_MID)
         button_container.pack(expand=True, pady=4)
         
-        # Download button (play button style) - Enhanced with hover effects
+        # Download button (play button style) - Authentic Winamp styling
         self.download_btn = tk.Button(
             button_container,
             text="► DOWNLOAD",
             command=self.start_download,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.TEXT_PRIMARY,
+            fg=WinampStyle.BUTTON_TEXT,
             relief="raised",
-            bd=3,
+            bd=2,
             width=14,
             height=2,
-            activebackground=WinampStyle.ACCENT_ORANGE_LIGHT,
+            activebackground=WinampStyle.ACCENT_ORANGE,
             activeforeground=WinampStyle.TEXT_WHITE,
-            cursor="hand2"
+            cursor="hand2",
+            highlightbackground=WinampStyle.BUTTON_LIGHT,
+            highlightcolor=WinampStyle.BUTTON_LIGHT
         )
         self.download_btn.pack(side="left", padx=3)
         
-        # Add hover effects
-        self.download_btn.bind("<Enter>", lambda e: self.download_btn.configure(bg=WinampStyle.ACCENT_ORANGE))
-        self.download_btn.bind("<Leave>", lambda e: self.download_btn.configure(bg=WinampStyle.BUTTON_FACE))
+        # Add authentic Winamp hover effects
+        self.download_btn.bind("<Enter>", lambda e: self.download_btn.configure(bg=WinampStyle.ACCENT_ORANGE, fg=WinampStyle.TEXT_WHITE))
+        self.download_btn.bind("<Leave>", lambda e: self.download_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT))
         
-        # Cancel button (stop button style) - Enhanced
+        # Cancel button (stop button style) - Authentic Winamp styling
         self.cancel_btn = tk.Button(
             button_container,
             text="■ STOP",
             command=self.cancel_download,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.TEXT_PRIMARY,
+            fg=WinampStyle.BUTTON_TEXT,
             relief="raised",
-            bd=3,
+            bd=2,
             width=10,
             height=2,
             state="disabled",
             activebackground=WinampStyle.TEXT_ERROR,
             activeforeground=WinampStyle.TEXT_WHITE,
-            cursor="hand2"
+            cursor="hand2",
+            highlightbackground=WinampStyle.BUTTON_LIGHT,
+            highlightcolor=WinampStyle.BUTTON_LIGHT,
+            disabledforeground=WinampStyle.BUTTON_SHADOW
         )
         self.cancel_btn.pack(side="left", padx=3)
         
-        # Clear button (reset button style) - Enhanced
+        # Clear button (reset button style) - Authentic Winamp styling
         clear_btn = tk.Button(
             button_container,
             text="⟲ CLEAR",
             command=self.clear_all,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.TEXT_PRIMARY,
+            fg=WinampStyle.BUTTON_TEXT,
             relief="raised",
-            bd=3,
+            bd=2,
             width=10,
             height=2,
             activebackground=WinampStyle.TEXT_WARNING,
             activeforeground=WinampStyle.TEXT_WHITE,
-            cursor="hand2"
+            cursor="hand2",
+            highlightbackground=WinampStyle.BUTTON_LIGHT,
+            highlightcolor=WinampStyle.BUTTON_LIGHT
         )
         clear_btn.pack(side="left", padx=3)
         
-        # Add hover effects for clear button
-        clear_btn.bind("<Enter>", lambda e: clear_btn.configure(bg=WinampStyle.TEXT_WARNING))
-        clear_btn.bind("<Leave>", lambda e: clear_btn.configure(bg=WinampStyle.BUTTON_FACE))
+        # Add authentic Winamp hover effects for clear button
+        clear_btn.bind("<Enter>", lambda e: clear_btn.configure(bg=WinampStyle.TEXT_WARNING, fg=WinampStyle.TEXT_WHITE))
+        clear_btn.bind("<Leave>", lambda e: clear_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT))
     
     def create_progress_section(self, parent, row):
         """Create progress tracking section - Enhanced YouClip style"""
