@@ -22,38 +22,39 @@ from utils.validators import Validators
 
 
 class WinampStyle:
-    """YouClip-inspired color scheme and styling constants - Ultra Authentic Early 2000s Style"""
+    """YouClip-inspired color scheme and styling constants - Dark Gunmetal Chrome Theme"""
     
-    # Core Winamp Colors - Authentic Classic Palette from the original
-    BG_PRIMARY = "#3c3c3c"          # Dark Winamp background
-    BG_SECONDARY = "#2a2a2a"        # Darker panel background
-    BG_ACCENT = "#4a4a4a"           # Light raised elements
-    BG_SUNKEN = "#1a1a1a"           # Deep sunken elements
-    BG_DARK = "#000000"             # Pure black for deep areas
+    # Core Dark Winamp Colors - Dark Gunmetal/Charcoal Metallic Palette
+    BG_PRIMARY = "#3a3a3a"          # Dark gunmetal background (was light chrome)
+    BG_SECONDARY = "#2d2d2d"        # Darker gunmetal panels  
+    BG_ACCENT = "#505050"           # Medium gunmetal raised elements
+    BG_SUNKEN = "#1a1a1a"           # Very dark gunmetal sunken elements
+    BG_DARK = "#404040"             # Dark gunmetal for deep areas
     
-    # Classic Winamp LCD/Display Colors - Authentic bright green
+    # Classic Winamp LCD/Display Colors - Keep authentic bright green
     BG_LCD = "#000000"              # Black LCD background
     TEXT_LCD = "#00ff41"            # Classic bright Winamp green
     TEXT_LCD_DIM = "#00cc33"        # Dimmed LCD text
     TEXT_LCD_GLOW = "#66ff66"       # LCD glow effect
     
-    # Metal/Chrome gradient colors for authentic 3D effect - Winamp style
-    CHROME_LIGHT = "#6a6a6a"        # Brightest highlight
-    CHROME_MID_LIGHT = "#5a5a5a"    # Mid highlight
-    CHROME_MID = "#4a4a4a"          # Base chrome
-    CHROME_MID_DARK = "#3a3a3a"     # Mid shadow
-    CHROME_DARK = "#2a2a2a"         # Deep shadow
-    CHROME_DARKEST = "#1a1a1a"      # Darkest shadow
+    # Dark Metal/Chrome gradient colors for authentic 3D effect on dark theme
+    CHROME_LIGHT = "#6a6a6a"        # Brightest chrome highlight (darker than white)
+    CHROME_MID_LIGHT = "#555555"    # Light chrome (dark theme)
+    CHROME_MID = "#3a3a3a"          # Base dark chrome
+    CHROME_MID_DARK = "#2d2d2d"     # Mid chrome shadow
+    CHROME_DARK = "#202020"         # Deep chrome shadow
+    CHROME_DARKEST = "#151515"      # Darkest chrome
     
-    # Classic button colors - Authentic Winamp style with better contrast
-    BUTTON_FACE = "#c0c0c0"         # Light button face like Winamp
-    BUTTON_LIGHT = "#ffffff"        # Button highlight
-    BUTTON_SHADOW = "#808080"       # Button shadow
-    BUTTON_DARK_SHADOW = "#404040"  # Button dark shadow
-    BUTTON_PRESSED = "#a0a0a0"      # Pressed button
-    BUTTON_TEXT = "#000000"         # Black text on light buttons
+    # Dark theme button colors - High contrast on dark backgrounds
+    BUTTON_FACE = "#4a4a4a"         # Dark button face
+    BUTTON_LIGHT = "#6a6a6a"        # Button highlight (light on dark)
+    BUTTON_SHADOW = "#2a2a2a"       # Button shadow
+    BUTTON_DARK_SHADOW = "#1a1a1a"  # Button dark shadow
+    BUTTON_PRESSED = "#353535"      # Pressed button
+    BUTTON_TEXT = "#ffffff"         # White text on dark buttons for contrast
+    BUTTON_TEXT_DARK = "#000000"    # Black text for light button backgrounds
     
-    # YouClip Orange accent - the classic Winamp color
+    # YouClip Orange accent - Keep the classic Winamp color
     ACCENT_ORANGE = "#ff6600"       # Classic Winamp orange
     ACCENT_ORANGE_LIGHT = "#ff8833" # Light orange
     ACCENT_ORANGE_DARK = "#cc4400"  # Dark orange
@@ -63,34 +64,40 @@ class WinampStyle:
     WINAMP_BLUE_LIGHT = "#4a6bb5"   # Light Winamp blue
     WINAMP_BLUE_DARK = "#1a3366"    # Dark Winamp blue
     
-    # Text colors for different contexts - Winamp style
+    # Text colors for dark theme - High contrast
     TEXT_PRIMARY = "#ffffff"        # White text on dark backgrounds
     TEXT_SECONDARY = "#cccccc"      # Light gray text
-    TEXT_WHITE = "#ffffff"          # White text
+    TEXT_WHITE = "#ffffff"          # White text for dark areas
     TEXT_ERROR = "#ff4444"          # Bright red for errors
     TEXT_SUCCESS = "#44ff44"        # Bright green for success
-    TEXT_WARNING = "#ffaa00"        # Bright orange for warnings
+    TEXT_WARNING = "#ffaa44"        # Bright orange for warnings
     
-    # Window frame colors for authentic 3D effect - Winamp style
-    FRAME_LIGHT = "#6a6a6a"         # Top/left highlight
+    # Window frame colors for authentic 3D effect on dark theme
+    FRAME_LIGHT = "#6a6a6a"         # Top/left highlight (lighter on dark)
     FRAME_SHADOW = "#2a2a2a"        # Bottom/right shadow
     FRAME_DARK_SHADOW = "#1a1a1a"   # Deep shadow
     
-    # Fonts - Authentic early 2000s style with much larger, more readable sizes
-    FONT_SYSTEM = ("MS Sans Serif", 12)          # Classic Windows system font
-    FONT_MAIN = ("MS Sans Serif", 12)            # Main interface font
-    FONT_HEADING = ("MS Sans Serif", 13, "bold") # Section headings
-    FONT_LCD = ("Fixedsys", 16, "bold")         # LCD displays (fixed-width)
-    FONT_TITLE = ("MS Sans Serif", 16, "bold")  # Main title
-    FONT_BUTTON = ("MS Sans Serif", 11, "bold")  # Button text
-    FONT_SMALL = ("MS Sans Serif", 11)           # Small text
+    # Classic Winamp progress bar colors
+    PROGRESS_BG = "#000000"         # Black progress background
+    PROGRESS_FILL = "#ffaa00"       # Classic orange/yellow progress fill
+    PROGRESS_HIGHLIGHT = "#ffcc33"  # Bright progress highlight
     
-    # Spacing and sizing - compact like original Winamp
-    PADDING_SMALL = 2
-    PADDING_MEDIUM = 4
-    PADDING_LARGE = 8
+    # Fonts - Larger, more readable bitmap-style fonts
+    FONT_SYSTEM = ("MS Sans Serif", 10, "bold")          # Larger system font
+    FONT_MAIN = ("MS Sans Serif", 10, "bold")            # Larger main interface font
+    FONT_HEADING = ("MS Sans Serif", 11, "bold")         # Larger section headings
+    FONT_LCD = ("Fixedsys", 11, "bold")                  # Larger LCD displays
+    FONT_TITLE = ("MS Sans Serif", 12, "bold")           # Larger main title
+    FONT_BUTTON = ("MS Sans Serif", 10, "bold")          # Larger button text
+    FONT_SMALL = ("MS Sans Serif", 9, "bold")            # Larger small text
+    FONT_MONO = ("Courier New", 10, "bold")              # Larger monospace
+    
+    # Spacing and sizing - slightly more spacious for readability
+    PADDING_SMALL = 3
+    PADDING_MEDIUM = 5
+    PADDING_LARGE = 10
     BORDER_WIDTH = 1
-    BUTTON_HEIGHT = 23              # Classic Windows button height
+    BUTTON_HEIGHT = 26              # Slightly taller buttons for larger text
     
     @staticmethod
     def create_3d_border_style(widget, style="raised"):
@@ -159,13 +166,13 @@ class YouTubeClipGUI:
         self.animate_title_scroll()
         
     def setup_window(self):
-        """Configure the main window - Authentic YouClip style"""
+        """Configure the main window - Authentic Winamp style with Windows 98 chrome"""
         self.root.title("YouClip v2.1 - [Stopped] - YouClip")
-        self.root.geometry("680x580")  # More compact like original YouClip
-        self.root.minsize(650, 550)
+        self.root.geometry("580x480")  # More compact like original Winamp
+        self.root.minsize(550, 450)
         self.root.resizable(True, True)
         
-        # Configure window background with authentic YouClip colors
+        # Configure window background with authentic chrome colors
         self.root.configure(bg=WinampStyle.BG_PRIMARY)
         
         # Try to set classic Windows styling
@@ -177,9 +184,9 @@ class YouTubeClipGUI:
         
         # Center window on screen
         self.root.update_idletasks()
-        x = (self.root.winfo_screenwidth() // 2) - (680 // 2)
-        y = (self.root.winfo_screenheight() // 2) - (580 // 2)
-        self.root.geometry(f"680x580+{x}+{y}")
+        x = (self.root.winfo_screenwidth() // 2) - (580 // 2)
+        y = (self.root.winfo_screenheight() // 2) - (480 // 2)
+        self.root.geometry(f"580x480+{x}+{y}")
         
         # Configure grid weights for responsive design
         self.root.columnconfigure(0, weight=1)
@@ -200,14 +207,14 @@ class YouTubeClipGUI:
     
     def create_widgets(self):
         """Create and layout all GUI widgets - Authentic YouClip style"""
-        # Main container with authentic Windows 95/98 3D border
+        # Main container with authentic Windows 98 chrome 3D border
         main_frame = tk.Frame(
             self.root, 
             bg=WinampStyle.BG_PRIMARY,
-            relief="flat",
-            bd=0
+            relief="raised",
+            bd=2
         )
-        main_frame.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+        main_frame.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
         main_frame.columnconfigure(0, weight=1)
         
         # Create authentic YouClip-style title bar
@@ -405,7 +412,7 @@ class YouTubeClipGUI:
             url_frame,
             textvariable=self.url_var,
             font=WinampStyle.FONT_LCD,
-            bg=WinampStyle.BG_SUNKEN,
+            bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
             relief="sunken",
             bd=1,
@@ -554,7 +561,7 @@ class YouTubeClipGUI:
             textvariable=self.start_time_var,
             width=10,
             font=WinampStyle.FONT_MAIN,
-            bg=WinampStyle.BG_SUNKEN,
+            bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
             relief="sunken",
             bd=1,
@@ -578,7 +585,7 @@ class YouTubeClipGUI:
             textvariable=self.end_time_var,
             width=10,
             font=WinampStyle.FONT_MAIN,
-            bg=WinampStyle.BG_SUNKEN,
+            bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
             relief="sunken",
             bd=1,
@@ -661,7 +668,7 @@ class YouTubeClipGUI:
             filename_frame,
             textvariable=self.filename_var,
             font=WinampStyle.FONT_MAIN,
-            bg=WinampStyle.BG_SUNKEN,
+            bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
             relief="sunken",
             bd=1,
@@ -710,42 +717,40 @@ class YouTubeClipGUI:
         button_frame = tk.Frame(parent, bg=WinampStyle.BG_PRIMARY)
         button_frame.grid(row=row, column=0, sticky="ew", pady=4, padx=2)
         
-        # Create classic YouClip-style transport buttons with authentic Winamp metallic styling
-        transport_frame = tk.Frame(button_frame, bg=WinampStyle.CHROME_MID, relief="raised", bd=2)
-        transport_frame.pack(fill="x", padx=2, pady=2)
+        # Create classic Winamp-style transport buttons with authentic metallic chrome styling
+        transport_frame = tk.Frame(button_frame, bg=WinampStyle.BG_SECONDARY, relief="sunken", bd=2)
+        transport_frame.pack(fill="x", padx=1, pady=1)
         
-        # Center the buttons
-        button_container = tk.Frame(transport_frame, bg=WinampStyle.CHROME_MID)
-        button_container.pack(expand=True, pady=4)
+        # Center the buttons with chrome background
+        button_container = tk.Frame(transport_frame, bg=WinampStyle.BG_SECONDARY)
+        button_container.pack(expand=True, pady=2)
         
-        # Download button (play button style) - Authentic Winamp styling
+        # Download button (play button style) - Compact Winamp styling
         self.download_btn = tk.Button(
             button_container,
-            text="► DOWNLOAD",
+            text="DOWNLOAD",
             command=self.start_download,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.BUTTON_TEXT,
+            fg=WinampStyle.BUTTON_TEXT_DARK,
             relief="raised",
             bd=2,
             width=14,
             height=2,
             activebackground=WinampStyle.ACCENT_ORANGE,
             activeforeground=WinampStyle.TEXT_WHITE,
-            cursor="hand2",
-            highlightbackground=WinampStyle.BUTTON_LIGHT,
-            highlightcolor=WinampStyle.BUTTON_LIGHT
+            cursor="hand2"
         )
-        self.download_btn.pack(side="left", padx=3)
+        self.download_btn.pack(side="left", padx=1)
         
         # Add authentic Winamp hover effects
         self.download_btn.bind("<Enter>", lambda e: self.download_btn.configure(bg=WinampStyle.ACCENT_ORANGE, fg=WinampStyle.TEXT_WHITE))
-        self.download_btn.bind("<Leave>", lambda e: self.download_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT))
+        self.download_btn.bind("<Leave>", lambda e: self.download_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT_DARK))
         
-        # Cancel button (stop button style) - Authentic Winamp styling
+        # Cancel button (stop button style) - Compact Winamp styling
         self.cancel_btn = tk.Button(
             button_container,
-            text="■ STOP",
+            text="STOP",
             command=self.cancel_download,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
@@ -758,35 +763,31 @@ class YouTubeClipGUI:
             activebackground=WinampStyle.TEXT_ERROR,
             activeforeground=WinampStyle.TEXT_WHITE,
             cursor="hand2",
-            highlightbackground=WinampStyle.BUTTON_LIGHT,
-            highlightcolor=WinampStyle.BUTTON_LIGHT,
-            disabledforeground=WinampStyle.BUTTON_SHADOW
+            disabledforeground=WinampStyle.TEXT_SECONDARY
         )
-        self.cancel_btn.pack(side="left", padx=3)
+        self.cancel_btn.pack(side="left", padx=1)
         
-        # Clear button (reset button style) - Authentic Winamp styling
+        # Clear button (reset button style) - Compact Winamp styling
         clear_btn = tk.Button(
             button_container,
-            text="⟲ CLEAR",
+            text="CLEAR",
             command=self.clear_all,
             font=WinampStyle.FONT_BUTTON,
             bg=WinampStyle.BUTTON_FACE,
-            fg=WinampStyle.BUTTON_TEXT,
+            fg=WinampStyle.BUTTON_TEXT_DARK,
             relief="raised",
             bd=2,
             width=10,
             height=2,
             activebackground=WinampStyle.TEXT_WARNING,
             activeforeground=WinampStyle.TEXT_WHITE,
-            cursor="hand2",
-            highlightbackground=WinampStyle.BUTTON_LIGHT,
-            highlightcolor=WinampStyle.BUTTON_LIGHT
+            cursor="hand2"
         )
-        clear_btn.pack(side="left", padx=3)
+        clear_btn.pack(side="left", padx=1)
         
         # Add authentic Winamp hover effects for clear button
         clear_btn.bind("<Enter>", lambda e: clear_btn.configure(bg=WinampStyle.TEXT_WARNING, fg=WinampStyle.TEXT_WHITE))
-        clear_btn.bind("<Leave>", lambda e: clear_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT))
+        clear_btn.bind("<Leave>", lambda e: clear_btn.configure(bg=WinampStyle.BUTTON_FACE, fg=WinampStyle.BUTTON_TEXT_DARK))
     
     def create_progress_section(self, parent, row):
         """Create progress tracking section - Enhanced YouClip style"""
@@ -807,18 +808,26 @@ class YouTubeClipGUI:
         progress_display.pack(fill="x", padx=2, pady=2)
         progress_display.columnconfigure(0, weight=1)
         
-        # Progress bar - enhanced LCD style with better visibility
+        # Progress bar - Classic Winamp orange/yellow seek bar style
         self.progress_var = tk.DoubleVar()
         self.progress_bar = tk.Frame(
             progress_display,
-            bg=WinampStyle.BG_LCD,
+            bg=WinampStyle.PROGRESS_BG,
             relief="sunken",
-            bd=2,
-            height=20
+            bd=1,
+            height=12
         )
-        self.progress_bar.grid(row=0, column=0, sticky="ew", pady=3, padx=4)
+        self.progress_bar.grid(row=0, column=0, sticky="ew", pady=2, padx=2)
         
-        # Progress status with enhanced LCD display
+        # Create the actual progress fill bar
+        self.progress_fill = tk.Frame(
+            self.progress_bar,
+            bg=WinampStyle.PROGRESS_FILL,
+            height=8
+        )
+        self.progress_fill.place(x=2, y=2, width=0, height=8)
+        
+        # Progress status with compact LCD display
         self.progress_status_var = tk.StringVar()
         self.progress_status_label = tk.Label(
             progress_display,
@@ -828,9 +837,9 @@ class YouTubeClipGUI:
             fg=WinampStyle.TEXT_LCD,
             anchor="w",
             relief="flat",
-            bd=1
+            bd=0
         )
-        self.progress_status_label.grid(row=1, column=0, sticky="ew", padx=4, pady=(0, 3))
+        self.progress_status_label.grid(row=1, column=0, sticky="ew", padx=2, pady=(1, 2))
     
     def create_status_section(self, parent, row):
         """Create status/log section - Enhanced YouClip style"""
@@ -842,12 +851,12 @@ class YouTubeClipGUI:
         # Configure main frame to expand this section
         parent.rowconfigure(row, weight=1)
         
-        # Status text area with enhanced YouClip styling
+        # Status text area with compact Winamp styling
         self.status_text = scrolledtext.ScrolledText(
             status_frame,
-            height=6,
+            height=5,
             wrap=tk.WORD,
-            font=WinampStyle.FONT_SMALL,
+            font=WinampStyle.FONT_LCD,
             bg=WinampStyle.BG_LCD,
             fg=WinampStyle.TEXT_LCD,
             relief="flat",
@@ -857,27 +866,28 @@ class YouTubeClipGUI:
             selectforeground=WinampStyle.BG_LCD,
             state=tk.DISABLED
         )
-        self.status_text.grid(row=0, column=0, sticky="nsew", padx=3, pady=3)
+        self.status_text.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
         
-        # Add initial message with enhanced retro styling
-        self.log_message("🎵 YouClip v2.1 Ready - Enter YouTube URL to begin 🎵", "info")
+        # Add initial message with authentic Winamp styling
+        self.log_message("YouClip v2.1 Ready", "info")
+        self.log_message("Enter YouTube URL to begin", "info")
     
     def setup_styles(self):
-        """Configure custom Winamp-inspired styles"""
+        """Configure custom dark Winamp-inspired styles"""
         style = ttk.Style()
         
-        # Set the theme to something darker
+        # Set the theme to something that works with dark colors
         try:
             style.theme_use('clam')
         except:
             pass
         
-        # Configure Winamp-style button
+        # Configure dark Winamp-style button with high contrast
         style.configure(
             "Winamp.TButton",
-            font=WinampStyle.FONT_MAIN,
-            background=WinampStyle.BG_ACCENT,
-            foreground=WinampStyle.TEXT_PRIMARY,
+            font=WinampStyle.FONT_BUTTON,
+            background=WinampStyle.BUTTON_FACE,
+            foreground=WinampStyle.BUTTON_TEXT,
             borderwidth=2,
             relief="raised",
             focuscolor="none"
@@ -886,12 +896,12 @@ class YouTubeClipGUI:
         style.map(
             "Winamp.TButton",
             background=[
-                ("active", WinampStyle.ACCENT_ORANGE_LIGHT),
-                ("pressed", WinampStyle.BG_SUNKEN)
+                ("active", WinampStyle.ACCENT_ORANGE),
+                ("pressed", WinampStyle.BUTTON_PRESSED)
             ],
             foreground=[
-                ("active", WinampStyle.TEXT_LCD),
-                ("pressed", WinampStyle.TEXT_LCD)
+                ("active", WinampStyle.TEXT_WHITE),
+                ("pressed", WinampStyle.TEXT_WHITE)
             ],
             relief=[
                 ("pressed", "sunken"),
@@ -899,7 +909,7 @@ class YouTubeClipGUI:
             ]
         )
         
-        # Configure Winamp-style frame
+        # Configure dark Winamp-style frame
         style.configure(
             "Winamp.TLabelFrame",
             background=WinampStyle.BG_SECONDARY,
@@ -915,17 +925,18 @@ class YouTubeClipGUI:
             font=WinampStyle.FONT_HEADING
         )
         
-        # Configure Winamp-style entry
+        # Configure dark Winamp-style entry with LCD colors
         style.configure(
             "Winamp.TEntry",
-            fieldbackground=WinampStyle.BG_SUNKEN,
+            fieldbackground=WinampStyle.BG_LCD,
             foreground=WinampStyle.TEXT_LCD,
             borderwidth=2,
             relief="sunken",
-            insertcolor=WinampStyle.TEXT_LCD
+            insertcolor=WinampStyle.TEXT_LCD,
+            font=WinampStyle.FONT_MAIN
         )
         
-        # Configure Winamp-style label
+        # Configure dark Winamp-style label
         style.configure(
             "Winamp.TLabel",
             background=WinampStyle.BG_SECONDARY,
@@ -933,14 +944,14 @@ class YouTubeClipGUI:
             font=WinampStyle.FONT_MAIN
         )
         
-        # Configure LCD-style label for status displays
+        # Configure LCD-style label for status displays (keep green LCD theme)
         style.configure(
             "LCD.TLabel",
-            background=WinampStyle.BG_SUNKEN,
+            background=WinampStyle.BG_LCD,
             foreground=WinampStyle.TEXT_LCD,
             font=WinampStyle.FONT_LCD,
             relief="sunken",
-            borderwidth=1
+            borderwidth=2
         )
     
     def on_url_change(self, event=None):
@@ -1348,8 +1359,24 @@ class YouTubeClipGUI:
             pass
     
     def update_progress_status(self, message):
-        """Update progress status message"""
+        """Update progress status message and progress bar fill"""
         self.progress_status_var.set(message)
+        
+        # Update progress bar fill if message contains percentage
+        if "%" in message:
+            try:
+                # Extract percentage from message
+                import re
+                match = re.search(r'(\d+(?:\.\d+)?)%', message)
+                if match:
+                    percentage = float(match.group(1))
+                    # Update progress bar width
+                    bar_width = self.progress_bar.winfo_width() - 4
+                    if bar_width > 0:
+                        fill_width = int((percentage / 100) * bar_width)
+                        self.progress_fill.place_configure(width=fill_width)
+            except:
+                pass
     
     def handle_error(self, error_message):
         """Handle and display errors"""
