@@ -27,8 +27,8 @@ def check_dependencies():
 def main():
     """Main launcher function"""
     # Check if we're in the right directory
-    if not Path("youclip_gui.py").exists():
-        print("❌ Error: youclip_gui.py not found in current directory")
+    if not Path("simple_gui.py").exists():
+        print("❌ Error: simple_gui.py not found in current directory")
         print("Please run this launcher from the YouClip project directory")
         sys.exit(1)
     
@@ -55,14 +55,21 @@ def main():
         if response != 'y':
             sys.exit(1)
     
-    # Launch GUI
+    # Launch stable GUI
     print("🚀 Launching YouClip GUI...")
     try:
-        from youclip_gui import main as gui_main
+        from simple_gui import main as gui_main
         gui_main()
     except Exception as e:
         print(f"❌ Failed to start GUI: {e}")
-        sys.exit(1)
+        print("\nTrying fallback command-line interface...")
+        try:
+            from youclip import YouClipCLI
+            cli = YouClipCLI()
+            cli.interactive_mode()
+        except Exception as cli_e:
+            print(f"❌ Command-line interface also failed: {cli_e}")
+            sys.exit(1)
 
 if __name__ == '__main__':
     main() 

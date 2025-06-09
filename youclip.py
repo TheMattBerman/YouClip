@@ -178,6 +178,32 @@ class YouClipCLI:
         
         return filename
     
+    def _clean_url(self, url: str) -> str:
+        """
+        Clean URL by removing common prefixes that users might accidentally include
+        
+        Args:
+            url: Original URL
+            
+        Returns:
+            Cleaned URL
+        """
+        if not url:
+            return url
+            
+        url = url.strip()
+        
+        # Remove common prefixes that users might accidentally include
+        if url.startswith('@'):
+            url = url[1:]
+        if url.startswith('www.'):
+            url = 'https://' + url
+        elif not url.startswith(('http://', 'https://')):
+            if 'youtube.com' in url or 'youtu.be' in url:
+                url = 'https://' + url
+        
+        return url
+    
     def progress_callback(self, message: str):
         """Progress callback for video processing"""
         print(f"\r{Fore.BLUE}🔄 {message}{Style.RESET_ALL}", end='', flush=True)
@@ -282,11 +308,14 @@ class YouClipCLI:
             sys.exit(1)
         
         try:
-            # Validate inputs
+            # Validate and clean inputs
             url = args.url
             if not Validators.is_valid_youtube_url(url):
                 self.print_error("Invalid YouTube URL")
                 sys.exit(1)
+            
+            # Clean the URL (remove @ prefix, add https if needed)
+            url = self._clean_url(url)
             
             # Parse times
             start_time = TimeParser.parse_time(args.start)
