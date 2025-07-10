@@ -5,6 +5,7 @@ A powerful command-line tool to download specific segments from YouTube videos u
 ## ✨ Features
 
 - **Precise Clipping**: Download exact segments using start and end times
+- **High Quality Video**: Support for 720p, 1080p, 1440p, 2160p (4K), and best available quality
 - **Multiple Time Formats**: Supports HH:MM:SS, MM:SS, or seconds
 - **Audio Extraction**: Option to extract audio-only clips (MP3)
 - **Smart Naming**: Automatically generates descriptive filenames
@@ -148,13 +149,25 @@ python youclip.py "YOUTUBE_URL" START_TIME END_TIME
    python youclip.py "https://youtube.com/watch?v=dQw4w9WgXcQ" 1:30 3:45 -o "my_clip.mp4"
    ```
 
-4. **Audio-only extraction:**
+4. **High quality 4K download:**
+
+   ```bash
+   python youclip.py "https://youtube.com/watch?v=dQw4w9WgXcQ" 1:30 3:45 --quality 2160p
+   ```
+
+5. **Best available quality:**
+
+   ```bash
+   python youclip.py "https://youtube.com/watch?v=dQw4w9WgXcQ" 0:30 2:00 --quality best
+   ```
+
+6. **Audio-only extraction:**
 
    ```bash
    python youclip.py "https://youtube.com/watch?v=dQw4w9WgXcQ" 0:30 2:00 --audio-only
    ```
 
-5. **Preview video information:**
+7. **Preview video information:**
    ```bash
    python youclip.py "https://youtube.com/watch?v=dQw4w9WgXcQ" --preview
    ```
@@ -170,8 +183,8 @@ YouClip supports multiple time formats:
 ### Command Line Options
 
 ```
-usage: youclip.py [-h] [-o OUTPUT] [--audio-only] [--preview] [--version]
-                  [url] [start] [end]
+usage: youclip.py [-h] [-o OUTPUT] [--audio-only] [--quality {720p,1080p,1440p,2160p,best}]
+                  [--preview] [--version] [url] [start] [end]
 
 positional arguments:
   url                   YouTube video URL
@@ -183,6 +196,8 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                        Output filename
   --audio-only         Extract audio only (MP3)
+  --quality {720p,1080p,1440p,2160p,best}
+                       Maximum video quality (default: 1440p)
   --preview           Preview video information only
   --version           show program's version number and exit
 ```

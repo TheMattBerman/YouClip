@@ -988,6 +988,40 @@ class YouTubeClipGUI:
             selectcolor=WinampStyle.BG_ACCENT
         )
         auto_check.grid(row=3, column=0, sticky="w", pady=(2, 4), padx=4)
+        
+        # Quality selection (only for video)
+        quality_frame = tk.Frame(parent, bg=WinampStyle.BG_SECONDARY)
+        quality_frame.grid(row=4, column=0, sticky="ew", padx=4, pady=(2, 4))
+        quality_frame.columnconfigure(1, weight=1)
+        
+        tk.Label(
+            quality_frame,
+            text="Quality:",
+            font=WinampStyle.FONT_SMALL,
+            fg=WinampStyle.TEXT_SECONDARY,
+            bg=WinampStyle.BG_SECONDARY
+        ).grid(row=0, column=0, sticky="w")
+        
+        self.quality_var = tk.StringVar(value="1440p")
+        quality_options = ["720p", "1080p", "1440p", "2160p", "best"]
+        
+        # Create dropdown with Winamp styling
+        quality_menu = tk.OptionMenu(
+            quality_frame,
+            self.quality_var,
+            *quality_options
+        )
+        quality_menu.configure(
+            font=WinampStyle.FONT_SMALL,
+            bg=WinampStyle.BUTTON_FACE,
+            fg=WinampStyle.BUTTON_TEXT,
+            relief="raised",
+            bd=2,
+            activebackground=WinampStyle.ACCENT_ORANGE,
+            activeforeground=WinampStyle.TEXT_WHITE,
+            width=8
+        )
+        quality_menu.grid(row=0, column=1, sticky="w", padx=(5, 0))
     
     def create_action_buttons(self, parent, row):
         """Create main action buttons with retro icons - Authentic YouClip style"""
@@ -1646,7 +1680,8 @@ class YouTubeClipGUI:
             
             # Create clip
             result_path = self.processor.create_clip(
-                url, start_time, end_time, output_path, audio_only, progress_callback
+                url, start_time, end_time, output_path, audio_only, progress_callback,
+                self.quality_var.get()
             )
             
             # Success

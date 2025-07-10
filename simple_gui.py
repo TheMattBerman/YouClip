@@ -114,6 +114,18 @@ class SimpleYouClipGUI:
         audio_check = ttk.Checkbutton(output_frame, text="Audio only (MP3)", variable=self.audio_only_var)
         audio_check.grid(row=1, column=0, columnspan=3, sticky="w", pady=(10, 0))
         
+        # Quality selection (only for video)
+        quality_frame = ttk.Frame(output_frame)
+        quality_frame.grid(row=2, column=0, columnspan=3, sticky="ew", pady=(10, 0))
+        
+        ttk.Label(quality_frame, text="Video Quality:").grid(row=0, column=0, sticky="w")
+        self.quality_var = tk.StringVar(value="1440p")
+        quality_combo = ttk.Combobox(quality_frame, textvariable=self.quality_var,
+                                   values=["720p", "1080p", "1440p", "2160p", "best"],
+                                   state="readonly", width=10)
+        quality_combo.grid(row=0, column=1, padx=(5, 0), sticky="w")
+        quality_combo.set("1440p")  # Set default
+        
         # Action buttons
         button_frame = ttk.Frame(main_frame)
         button_frame.grid(row=5, column=0, columnspan=3, pady=20)
@@ -261,7 +273,8 @@ class SimpleYouClipGUI:
                 
                 result_path = self.processor.create_clip(
                     url, start_time, end_time, output_path, 
-                    self.audio_only_var.get(), progress_callback
+                    self.audio_only_var.get(), progress_callback, 
+                    self.quality_var.get()
                 )
                 
                 # Success

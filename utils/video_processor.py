@@ -105,12 +105,13 @@ class VideoProcessor:
         except Exception as e:
             print(f"Error retrieving video info: {e}")
     
-    def get_best_format(self, audio_only: bool = False) -> Optional[str]:
+    def get_best_format(self, audio_only: bool = False, max_quality: str = "1440p") -> Optional[str]:
         """
         Get the best available format for the video
         
         Args:
             audio_only: If True, get best audio format
+            max_quality: Maximum quality to download (1080p, 1440p, 2160p, or 'best')
             
         Returns:
             Format selector string for yt-dlp
@@ -122,13 +123,27 @@ class VideoProcessor:
             # Try audio formats in order of preference, fallback to any available
             return 'bestaudio[ext=m4a]/bestaudio[ext=mp3]/bestaudio/best'
         else:
-            # For video, try best combined format, then best video+audio merge, then any best
-            # Note: not specifying format lets yt-dlp choose the best available
-            return 'best[height<=1080]/best'
+            # Map quality settings to height limits
+            quality_map = {
+                "720p": 720,
+                "1080p": 1080, 
+                "1440p": 1440,
+                "2160p": 2160,
+                "best": None
+            }
+            
+            if max_quality == "best" or max_quality not in quality_map:
+                # Download best available quality without restrictions
+                return 'best[ext=mp4]/best[ext=mkv]/best'
+            else:
+                max_height = quality_map[max_quality]
+                # Try to get best format up to specified quality, with better fallbacks
+                return f'best[height<={max_height}][ext=mp4]/best[height<={max_height}]/best[ext=mp4]/best'
     
     def create_clip(self, url: str, start_time: float, end_time: float, 
                    output_path: str, audio_only: bool = False, 
-                   progress_callback: Optional[callable] = None) -> str:
+                   progress_callback: Optional[callable] = None,
+                   max_quality: str = "1440p") -> str:
         """
         Create a clip from YouTube video
         
@@ -139,6 +154,7 @@ class VideoProcessor:
             output_path: Output file path
             audio_only: If True, extract audio only
             progress_callback: Optional callback for progress updates
+            max_quality: Maximum video quality (720p, 1080p, 1440p, 2160p, or 'best')
             
         Returns:
             Path to the created clip file
@@ -159,7 +175,7 @@ class VideoProcessor:
         
         try:
             # Step 1: Download the full video to temp directory
-            temp_video_path = self._download_video(url, audio_only, progress_callback)
+            temp_video_path = self._download_video(url, audio_only, progress_callback, max_quality)
             
             # Step 2: Extract clip using ffmpeg
             final_path = self._extract_clip_ffmpeg(temp_video_path, start_time, end_time, 
@@ -172,7 +188,8 @@ class VideoProcessor:
             self._cleanup_temp_files()
     
     def _download_video(self, url: str, audio_only: bool = False, 
-                       progress_callback: Optional[callable] = None) -> str:
+                       progress_callback: Optional[callable] = None,
+                       max_quality: str = "1440p") -> str:
         """
         Download video to temporary directory
         
@@ -180,6 +197,7 @@ class VideoProcessor:
             url: YouTube URL
             audio_only: If True, download audio only
             progress_callback: Progress callback function
+            max_quality: Maximum video quality to download
             
         Returns:
             Path to downloaded video file
@@ -193,7 +211,7 @@ class VideoProcessor:
                 except:
                     pass
         
-        format_selector = self.get_best_format(audio_only)
+        format_selector = self.get_best_format(audio_only, max_quality)
         
         # Prepare output template
         output_template = os.path.join(self.temp_dir, '%(title)s.%(ext)s')

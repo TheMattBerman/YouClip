@@ -248,6 +248,34 @@ class YouClipCLI:
                 else:
                     self.print_error("Please enter 1 or 2")
             
+            # Ask for quality preference (only for video)
+            max_quality = "1440p"  # default
+            if not audio_only:
+                print(f"\n{Fore.YELLOW}Video quality:{Style.RESET_ALL}")
+                print("1. 720p (HD)")
+                print("2. 1080p (Full HD)")
+                print("3. 1440p (2K) - Recommended")
+                print("4. 2160p (4K)")
+                print("5. Best available")
+                
+                quality_choices = {
+                    '1': '720p',
+                    '2': '1080p', 
+                    '3': '1440p',
+                    '4': '2160p',
+                    '5': 'best'
+                }
+                
+                while True:
+                    choice = input("Choose quality (1-5, default is 3): ").strip()
+                    if not choice:  # Default to 1440p
+                        choice = '3'
+                    if choice in quality_choices:
+                        max_quality = quality_choices[choice]
+                        break
+                    else:
+                        self.print_error("Please enter 1, 2, 3, 4, or 5")
+            
             # Get time range
             duration = self.current_video_info.get('duration')
             start_time = self.get_time_input("Enter start time:", duration)
@@ -277,7 +305,7 @@ class YouClipCLI:
             
             result_path = self.processor.create_clip(
                 url, start_time, end_time, output_filename, 
-                audio_only, self.progress_callback
+                audio_only, self.progress_callback, max_quality
             )
             
             print()  # New line after progress
@@ -349,7 +377,7 @@ class YouClipCLI:
             self.print_info("Creating clip...")
             result_path = self.processor.create_clip(
                 url, start_time, end_time, output_filename,
-                args.audio_only, self.progress_callback
+                args.audio_only, self.progress_callback, args.quality
             )
             
             print()  # New line after progress
@@ -381,16 +409,20 @@ Examples:
   # Command line mode
   python youclip.py "https://youtube.com/watch?v=VIDEO_ID" 30 90
   
-  # With custom output
-  python youclip.py "https://youtube.com/watch?v=VIDEO_ID" 1:30 3:45 -o my_clip.mp4
+  # With custom output and quality
+  python youclip.py "https://youtube.com/watch?v=VIDEO_ID" 1:30 3:45 -o my_clip.mp4 --quality 2160p
   
   # Audio only
   python youclip.py "https://youtube.com/watch?v=VIDEO_ID" 0:30 2:00 --audio-only
+  
+  # Best available quality
+  python youclip.py "https://youtube.com/watch?v=VIDEO_ID" 1:00 2:00 --quality best
   
   # Preview video info
   python youclip.py "https://youtube.com/watch?v=VIDEO_ID" --preview
   
 Time formats: HH:MM:SS, MM:SS, or seconds (e.g., 30, 1:30, 0:01:30)
+Quality options: 720p, 1080p, 1440p (default), 2160p, best
         """
     )
     
@@ -400,6 +432,8 @@ Time formats: HH:MM:SS, MM:SS, or seconds (e.g., 30, 1:30, 0:01:30)
     
     parser.add_argument('-o', '--output', help='Output filename')
     parser.add_argument('--audio-only', action='store_true', help='Extract audio only (MP3)')
+    parser.add_argument('--quality', choices=['720p', '1080p', '1440p', '2160p', 'best'], 
+                       default='1440p', help='Maximum video quality (default: 1440p)')
     parser.add_argument('--preview', action='store_true', help='Preview video information only')
     parser.add_argument('--version', action='version', version='YouClip 1.0.0')
     
