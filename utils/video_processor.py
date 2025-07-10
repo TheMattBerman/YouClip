@@ -226,23 +226,62 @@ class VideoProcessor:
         
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                if progress_callback:
+                    progress_callback(f"Starting download with format: {format_selector}")
+                
                 info = ydl.extract_info(url, download=True)
                 
                 # Find the downloaded file
                 expected_filename = ydl.prepare_filename(info)
                 
                 if os.path.exists(expected_filename):
+                    file_size = os.path.getsize(expected_filename)
+                    if progress_callback:
+                        progress_callback(f"Download completed: {file_size} bytes")
+                    if file_size == 0:
+                        raise Exception("Downloaded file is empty (0 bytes)")
                     return expected_filename
                 
                 # Fallback: search for any video file in temp directory
                 for file in os.listdir(self.temp_dir):
                     file_path = os.path.join(self.temp_dir, file)
                     if os.path.isfile(file_path):
-                        return file_path
+                        file_size = os.path.getsize(file_path)
+                        if file_size > 0:
+                            if progress_callback:
+                                progress_callback(f"Found file: {file} ({file_size} bytes)")
+                            return file_path
                 
-                raise Exception("Downloaded file not found")
+                # List all files in temp directory for debugging
+                temp_files = os.listdir(self.temp_dir) if os.path.exists(self.temp_dir) else []
+                raise Exception(f"No valid downloaded file found. Temp files: {temp_files}")
                 
+        except yt_dlp.utils.DownloadError as e:
+            raise Exception(f"yt-dlp download error: {str(e)}")
         except Exception as e:
+            if "format" in str(e).lower():
+                # Format selection failed, try fallback
+                if progress_callback:
+                    progress_callback("Format selection failed, trying fallback...")
+                
+                fallback_format = 'best[ext=mp4]/best'
+                ydl_opts['format'] = fallback_format
+                
+                try:
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        info = ydl.extract_info(url, download=True)
+                        expected_filename = ydl.prepare_filename(info)
+                        
+                        if os.path.exists(expected_filename):
+                            file_size = os.path.getsize(expected_filename)
+                            if file_size > 0:
+                                if progress_callback:
+                                    progress_callback(f"Fallback download successful: {file_size} bytes")
+                                return expected_filename
+                    
+                except Exception as fallback_e:
+                    raise Exception(f"Download failed with both primary and fallback formats. Primary: {str(e)}, Fallback: {str(fallback_e)}")
+            
             raise Exception(f"Download failed: {str(e)}")
     
     def _extract_clip_ffmpeg(self, input_path: str, start_time: float, end_time: float,
@@ -314,8 +353,16 @@ class VideoProcessor:
                 check=True
             )
             
+            # Check if output file was created and has content
+            if not os.path.exists(output_path):
+                raise Exception(f"FFmpeg did not create output file: {output_path}")
+            
+            output_size = os.path.getsize(output_path)
+            if output_size == 0:
+                raise Exception(f"FFmpeg created empty file (0 bytes): {output_path}")
+            
             if progress_callback:
-                progress_callback("Clip extraction completed!")
+                progress_callback(f"Clip extraction completed! Output: {output_size} bytes")
             
             return output_path
             
