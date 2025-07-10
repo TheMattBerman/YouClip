@@ -133,12 +133,12 @@ class VideoProcessor:
             }
             
             if max_quality == "best" or max_quality not in quality_map:
-                # Download best available quality without restrictions
-                return 'best[ext=mp4]/best[ext=mkv]/best'
+                # Download best available quality - use separate video+audio for highest quality
+                return 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best[ext=mp4]/best'
             else:
                 max_height = quality_map[max_quality]
-                # Try to get best format up to specified quality, with better fallbacks
-                return f'best[height<={max_height}][ext=mp4]/best[height<={max_height}]/best[ext=mp4]/best'
+                # Use separate video+audio streams for high quality, with fallbacks
+                return f'bestvideo[height<={max_height}][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<={max_height}]+bestaudio/best[height<={max_height}][ext=mp4]/best[height<={max_height}]/best[ext=mp4]/best'
     
     def create_clip(self, url: str, start_time: float, end_time: float, 
                    output_path: str, audio_only: bool = False, 
@@ -288,25 +288,13 @@ class VideoProcessor:
             if not output_path.endswith(('.mp3', '.aac', '.m4a', '.wav')):
                 output_path = os.path.splitext(output_path)[0] + '.mp3'
         else:
-            # For video clips, decide between copy and re-encode based on duration
-            # For short clips (< 60 seconds), use re-encoding for better precision
-            # For longer clips, use stream copy for speed
-            if duration < 60:
-                # Re-encode for precision with short clips
-                cmd.extend([
-                    '-c:v', 'libx264',  # Re-encode video with H.264
-                    '-c:a', 'aac',      # Re-encode audio with AAC
-                    '-preset', 'fast',  # Use fast preset for speed
-                    '-crf', '23',       # Good quality setting
-                    '-movflags', '+faststart'  # Optimize for web playback
-                ])
-            else:
-                # Use stream copy for longer clips (faster)
-                cmd.extend([
-                    '-c', 'copy',
-                    '-avoid_negative_ts', 'make_zero',
-                    '-copyts'  # Copy timestamps to maintain sync
-                ])
+            # For video clips, use stream copy to preserve original quality
+            # This maintains the exact quality and resolution of the downloaded video
+            cmd.extend([
+                '-c', 'copy',
+                '-avoid_negative_ts', 'make_zero',
+                '-copyts'  # Copy timestamps to maintain sync
+            ])
             
             # Ensure output has video extension
             if not output_path.endswith(('.mp4', '.mkv', '.avi')):
@@ -316,10 +304,7 @@ class VideoProcessor:
         
         try:
             if progress_callback:
-                if duration < 60:
-                    progress_callback("Extracting clip with ffmpeg (re-encoding for precision)...")
-                else:
-                    progress_callback("Extracting clip with ffmpeg (stream copy for speed)...")
+                progress_callback("Extracting clip with ffmpeg (stream copy for quality)...")
             
             # Run ffmpeg command
             result = subprocess.run(
@@ -340,7 +325,7 @@ class VideoProcessor:
                 if progress_callback:
                     progress_callback("Stream copy failed, retrying with re-encoding...")
                 
-                # Remove stream copy options and add re-encoding
+                # Remove stream copy options and add high-quality re-encoding
                 fallback_cmd = [
                     'ffmpeg',
                     '-ss', str(start_time),
@@ -348,8 +333,8 @@ class VideoProcessor:
                     '-t', str(duration),
                     '-c:v', 'libx264',
                     '-c:a', 'aac',
-                    '-preset', 'fast',
-                    '-crf', '23',
+                    '-preset', 'slow',   # Better quality preset
+                    '-crf', '18',        # High quality setting
                     '-movflags', '+faststart',
                     '-y',
                     output_path
