@@ -229,60 +229,88 @@ class VideoProcessor:
                 if progress_callback:
                     progress_callback(f"Starting download with format: {format_selector}")
                 
-                info = ydl.extract_info(url, download=True)
-                
-                # Find the downloaded file
+                # Extract info first to get expected filename
+                info = ydl.extract_info(url, download=False)
                 expected_filename = ydl.prepare_filename(info)
                 
+                if progress_callback:
+                    progress_callback(f"Expected filename: {os.path.basename(expected_filename)}")
+                
+                # Now download
+                ydl.download([url])
+                
+                # Check if the expected file exists and has content
                 if os.path.exists(expected_filename):
                     file_size = os.path.getsize(expected_filename)
                     if progress_callback:
                         progress_callback(f"Download completed: {file_size} bytes")
+                    
                     if file_size == 0:
                         raise Exception("Downloaded file is empty (0 bytes)")
+                    elif file_size < 1000:  # Less than 1KB is suspicious
+                        raise Exception(f"Downloaded file is suspiciously small ({file_size} bytes)")
+                    
                     return expected_filename
                 
                 # Fallback: search for any video file in temp directory
-                for file in os.listdir(self.temp_dir):
-                    file_path = os.path.join(self.temp_dir, file)
-                    if os.path.isfile(file_path):
-                        file_size = os.path.getsize(file_path)
-                        if file_size > 0:
-                            if progress_callback:
-                                progress_callback(f"Found file: {file} ({file_size} bytes)")
-                            return file_path
+                temp_files = []
+                if os.path.exists(self.temp_dir):
+                    for file in os.listdir(self.temp_dir):
+                        file_path = os.path.join(self.temp_dir, file)
+                        if os.path.isfile(file_path):
+                            file_size = os.path.getsize(file_path)
+                            temp_files.append(f"{file} ({file_size} bytes)")
+                            
+                            if file_size > 1000:  # Valid size threshold
+                                if progress_callback:
+                                    progress_callback(f"Found fallback file: {file} ({file_size} bytes)")
+                                return file_path
                 
-                # List all files in temp directory for debugging
-                temp_files = os.listdir(self.temp_dir) if os.path.exists(self.temp_dir) else []
-                raise Exception(f"No valid downloaded file found. Temp files: {temp_files}")
+                raise Exception(f"No valid downloaded file found. Expected: {expected_filename}, Temp files: {temp_files}")
                 
         except yt_dlp.utils.DownloadError as e:
-            raise Exception(f"yt-dlp download error: {str(e)}")
-        except Exception as e:
-            if "format" in str(e).lower():
-                # Format selection failed, try fallback
-                if progress_callback:
-                    progress_callback("Format selection failed, trying fallback...")
-                
-                fallback_format = 'best[ext=mp4]/best'
-                ydl_opts['format'] = fallback_format
-                
-                try:
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(url, download=True)
-                        expected_filename = ydl.prepare_filename(info)
-                        
-                        if os.path.exists(expected_filename):
-                            file_size = os.path.getsize(expected_filename)
-                            if file_size > 0:
-                                if progress_callback:
-                                    progress_callback(f"Fallback download successful: {file_size} bytes")
-                                return expected_filename
-                    
-                except Exception as fallback_e:
-                    raise Exception(f"Download failed with both primary and fallback formats. Primary: {str(e)}, Fallback: {str(fallback_e)}")
+            error_msg = str(e)
+            if progress_callback:
+                progress_callback(f"yt-dlp download error: {error_msg}")
             
-            raise Exception(f"Download failed: {str(e)}")
+            # Try simplified format fallback
+            if not audio_only:
+                fallback_formats = [
+                    'best[ext=mp4][height<=1440]/best[height<=1440]',
+                    'best[ext=mp4]/best'
+                ]
+                
+                for fallback_format in fallback_formats:
+                    try:
+                        if progress_callback:
+                            progress_callback(f"Trying fallback format: {fallback_format}")
+                        
+                        ydl_opts['format'] = fallback_format
+                        
+                        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                            info = ydl.extract_info(url, download=False)
+                            expected_filename = ydl.prepare_filename(info)
+                            ydl.download([url])
+                            
+                            if os.path.exists(expected_filename):
+                                file_size = os.path.getsize(expected_filename)
+                                if file_size > 1000:
+                                    if progress_callback:
+                                        progress_callback(f"Fallback successful: {file_size} bytes")
+                                    return expected_filename
+                        
+                    except Exception as fallback_e:
+                        if progress_callback:
+                            progress_callback(f"Fallback {fallback_format} failed: {fallback_e}")
+                        continue
+            
+            raise Exception(f"All download attempts failed. Original error: {error_msg}")
+            
+        except Exception as e:
+            error_msg = str(e)
+            if progress_callback:
+                progress_callback(f"Unexpected download error: {error_msg}")
+            raise Exception(f"Download failed: {error_msg}")
     
     def _extract_clip_ffmpeg(self, input_path: str, start_time: float, end_time: float,
                            output_path: str, audio_only: bool = False,
@@ -308,6 +336,19 @@ class VideoProcessor:
             3. Use stream copy for longer clips to maintain speed
             4. Fallback to re-encoding if stream copy fails
         """
+        # Validate input file
+        if not os.path.exists(input_path):
+            raise Exception(f"Input file does not exist: {input_path}")
+        
+        input_size = os.path.getsize(input_path)
+        if input_size == 0:
+            raise Exception(f"Input file is empty (0 bytes): {input_path}")
+        elif input_size < 1000:
+            raise Exception(f"Input file is suspiciously small ({input_size} bytes): {input_path}")
+        
+        if progress_callback:
+            progress_callback(f"Input file validated: {input_size} bytes")
+        
         duration = end_time - start_time
         
         # Prepare ffmpeg command
@@ -327,12 +368,14 @@ class VideoProcessor:
             if not output_path.endswith(('.mp3', '.aac', '.m4a', '.wav')):
                 output_path = os.path.splitext(output_path)[0] + '.mp3'
         else:
-            # For video clips, use stream copy to preserve original quality
-            # This maintains the exact quality and resolution of the downloaded video
+            # For video clips, use re-encoding for better compatibility and precision
+            # VP9 videos often have stream copy issues with precise timing
             cmd.extend([
-                '-c', 'copy',
-                '-avoid_negative_ts', 'make_zero',
-                '-copyts'  # Copy timestamps to maintain sync
+                '-c:v', 'libx264',      # Re-encode to H.264 for compatibility
+                '-c:a', 'aac',          # Re-encode audio to AAC
+                '-preset', 'fast',      # Faster preset for reasonable speed
+                '-crf', '18',           # High quality setting (lower = better quality)
+                '-movflags', '+faststart'  # Optimize for web playback
             ])
             
             # Ensure output has video extension
@@ -343,7 +386,8 @@ class VideoProcessor:
         
         try:
             if progress_callback:
-                progress_callback("Extracting clip with ffmpeg (stream copy for quality)...")
+                progress_callback("Extracting clip with ffmpeg (re-encoding for precision)...")
+                progress_callback(f"FFmpeg command: {' '.join(cmd)}")
             
             # Run ffmpeg command
             result = subprocess.run(
@@ -359,7 +403,12 @@ class VideoProcessor:
             
             output_size = os.path.getsize(output_path)
             if output_size == 0:
-                raise Exception(f"FFmpeg created empty file (0 bytes): {output_path}")
+                stderr_info = result.stderr if result.stderr else "No stderr"
+                raise Exception(f"FFmpeg created empty file (0 bytes): {output_path}. FFmpeg stderr: {stderr_info}")
+            elif output_size < 1000:
+                # For very small files, show more debug info
+                stderr_info = result.stderr if result.stderr else "No stderr"
+                raise Exception(f"FFmpeg created suspiciously small file ({output_size} bytes): {output_path}. FFmpeg stderr: {stderr_info}")
             
             if progress_callback:
                 progress_callback(f"Clip extraction completed! Output: {output_size} bytes")
@@ -367,27 +416,35 @@ class VideoProcessor:
             return output_path
             
         except subprocess.CalledProcessError as e:
-            # If stream copy fails, try re-encoding as fallback
-            if '-c' in cmd and 'copy' in cmd:
+            # Capture detailed error information
+            stderr_info = e.stderr if e.stderr else "No stderr available"
+            
+            if progress_callback:
+                progress_callback(f"FFmpeg failed. Error: {stderr_info}")
+            
+            # Try with alternative encoding settings as fallback
+            if not audio_only:
                 if progress_callback:
-                    progress_callback("Stream copy failed, retrying with re-encoding...")
+                    progress_callback("Trying alternative encoding settings...")
                 
-                # Remove stream copy options and add high-quality re-encoding
+                # Alternative encoding approach
                 fallback_cmd = [
                     'ffmpeg',
-                    '-ss', str(start_time),
                     '-i', input_path,
+                    '-ss', str(start_time),
                     '-t', str(duration),
                     '-c:v', 'libx264',
-                    '-c:a', 'aac',
-                    '-preset', 'slow',   # Better quality preset
-                    '-crf', '18',        # High quality setting
-                    '-movflags', '+faststart',
+                    '-c:a', 'copy',         # Try copying audio instead
+                    '-preset', 'ultrafast', # Fastest preset
+                    '-crf', '23',           # Slightly lower quality for speed
                     '-y',
                     output_path
                 ]
                 
                 try:
+                    if progress_callback:
+                        progress_callback(f"Fallback command: {' '.join(fallback_cmd)}")
+                    
                     fallback_result = subprocess.run(
                         fallback_cmd,
                         capture_output=True,
@@ -395,15 +452,24 @@ class VideoProcessor:
                         check=True
                     )
                     
-                    if progress_callback:
-                        progress_callback("Clip extraction completed with re-encoding!")
-                    
-                    return output_path
+                    # Validate fallback output
+                    if os.path.exists(output_path):
+                        output_size = os.path.getsize(output_path)
+                        if output_size > 1000:
+                            if progress_callback:
+                                progress_callback(f"Fallback encoding successful! Output: {output_size} bytes")
+                            return output_path
+                        else:
+                            fallback_stderr = fallback_result.stderr if fallback_result.stderr else "No stderr"
+                            raise Exception(f"Fallback encoding created small file ({output_size} bytes). Stderr: {fallback_stderr}")
+                    else:
+                        raise Exception("Fallback encoding did not create output file")
                     
                 except subprocess.CalledProcessError as fallback_e:
-                    raise Exception(f"FFmpeg failed (both copy and re-encode): {fallback_e.stderr}")
-            else:
-                raise Exception(f"FFmpeg failed: {e.stderr}")
+                    fallback_stderr = fallback_e.stderr if fallback_e.stderr else "No stderr"
+                    raise Exception(f"Both primary and fallback encoding failed. Primary: {stderr_info}, Fallback: {fallback_stderr}")
+            
+            raise Exception(f"FFmpeg failed: {stderr_info}")
                 
         except FileNotFoundError:
             raise Exception("FFmpeg not found. Please install ffmpeg and ensure it's in your PATH.")

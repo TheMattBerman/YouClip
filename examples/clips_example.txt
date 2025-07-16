@@ -1,0 +1,23 @@
+# Example clips in natural language format
+# YouClip Batch Extractor will parse this automatically
+
+# Video 1: Funny moments compilation
+https://www.youtube.com/watch?v=WMmbg73rHEM
+14:09 to 14:12
+This is a hilarious moment
+
+# Video 2: Tutorial highlights  
+https://www.youtube.com/watch?v=eKwkoybyS_w
+1 to 4 seconds
+1:35 to 1:40
+from 1:58 to 2:02
+
+# You can also use different time formats:
+# - HH:MM:SS (e.g., 1:23:45)
+# - MM:SS (e.g., 2:30)
+# - Seconds only (e.g., 90)
+
+# Different ways to express ranges:
+# - "to", "-", "–" all work
+# - "from X to Y" format
+# - Simple "X to Y" format 

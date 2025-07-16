@@ -1,0 +1,20 @@
+{
+  "name": "My Clip Collection",
+  "output_directory": "extracted_clips",
+  "clips": [
+    {
+      "url": "https://www.youtube.com/watch?v=EXAMPLE1",
+      "start_time": "1:30",
+      "end_time": "2:45",
+      "output_filename": "clip1.mp4",
+      "description": "First clip description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=EXAMPLE2",
+      "start_time": "0:10",
+      "end_time": "0:25",
+      "output_filename": "clip2.mp4",
+      "description": "Second clip description"
+    }
+  ]
+}

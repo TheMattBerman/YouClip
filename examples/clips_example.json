@@ -1,0 +1,35 @@
+{
+  "name": "My Video Highlights",
+  "output_directory": "my_clips",
+  "created_at": "2024-01-15T10:30:00",
+  "clips": [
+    {
+      "url": "https://www.youtube.com/watch?v=WMmbg73rHEM",
+      "start_time": "14:09",
+      "end_time": "14:12",
+      "output_filename": "funny_moment_1.mp4",
+      "description": "Hilarious blooper moment"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=eKwkoybyS_w",
+      "start_time": "1",
+      "end_time": "4",
+      "output_filename": "intro_clip.mp4",
+      "description": "Video introduction"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=eKwkoybyS_w",
+      "start_time": "1:35",
+      "end_time": "1:40",
+      "output_filename": "tutorial_highlight.mp4",
+      "description": "Key tutorial moment"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=eKwkoybyS_w",
+      "start_time": "1:58",
+      "end_time": "2:02",
+      "output_filename": "final_tip.mp4",
+      "description": "Important final tip"
+    }
+  ]
+} 

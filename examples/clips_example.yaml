@@ -1,0 +1,28 @@
+name: "My Video Collection"
+output_directory: "extracted_clips"
+created_at: "2024-01-15T10:30:00"
+
+clips:
+  - url: "https://www.youtube.com/watch?v=WMmbg73rHEM"
+    start_time: "14:09"
+    end_time: "14:12"
+    output_filename: "funny_moment.mp4"
+    description: "Hilarious blooper moment"
+
+  - url: "https://www.youtube.com/watch?v=eKwkoybyS_w"
+    start_time: "1"
+    end_time: "4"
+    output_filename: "intro.mp4"
+    description: "Video introduction"
+
+  - url: "https://www.youtube.com/watch?v=eKwkoybyS_w"
+    start_time: "1:35"
+    end_time: "1:40"
+    output_filename: "highlight.mp4"
+    description: "Tutorial highlight"
+
+  - url: "https://www.youtube.com/watch?v=eKwkoybyS_w"
+    start_time: "1:58"
+    end_time: "2:02"
+    output_filename: "tip.mp4"
+    description: "Final tip"
