@@ -5,6 +5,9 @@ A powerful command-line tool to download specific segments from YouTube videos u
 ## ✨ Features
 
 - **Precise Clipping**: Download exact segments using start and end times
+- **🚀 Batch Extraction**: Process multiple clips from multiple videos with AI-powered parsing
+- **🤖 Natural Language Input**: Understands "1:30 to 2:45" and other natural time expressions
+- **📄 Multiple Input Formats**: Text files, JSON, YAML, and interactive input
 - **High Quality Video**: Support for 720p, 1080p, 1440p, 2160p (4K), and best available quality
 - **Multiple Time Formats**: Supports HH:MM:SS, MM:SS, or seconds
 - **Audio Extraction**: Option to extract audio-only clips (MP3)
@@ -242,6 +245,160 @@ python youclip.py "$VIDEO_URL" 2:30 3:45 -o "main_part.mp4"
 python youclip.py "$VIDEO_URL" 5:00 5:30 --audio-only -o "outro_music.mp3"
 ```
 
+## 🚀 Batch Extraction System
+
+YouClip now features a powerful modular batch extraction system that can process multiple clips from multiple videos using AI-powered parsing!
+
+### 🎯 Key Features
+
+- **🤖 AI-Powered Parsing**: Understands natural language descriptions
+- **📄 Multiple Input Formats**: Text files, JSON, YAML, and interactive input
+- **🔄 Modular Design**: Easy to extend and customize
+- **📊 Progress Tracking**: Detailed progress and error reporting
+- **🎯 Flexible Time Formats**: Supports various time code formats
+
+### Quick Start Examples
+
+**1. Natural Language Text File:**
+
+Create a text file (`my_clips.txt`) with URLs and time codes:
+
+```text
+# Video highlights collection
+https://www.youtube.com/watch?v=ABC123
+1:30 to 2:45
+5:10 to 5:30
+
+https://www.youtube.com/watch?v=XYZ789
+from 0:10 to 0:25
+2:15 - 2:45
+```
+
+Extract all clips:
+
+```bash
+python3 batch_extract.py -i my_clips.txt
+```
+
+**2. Interactive Mode:**
+
+```bash
+python3 batch_extract.py --interactive
+```
+
+**3. JSON Configuration:**
+
+```bash
+python3 batch_extract.py -i examples/clips_example.json
+```
+
+**4. YAML Configuration:**
+
+```bash
+python3 batch_extract.py -i examples/clips_example.yaml
+```
+
+### Command Line Options
+
+```bash
+# Basic usage
+python3 batch_extract.py -i clips.txt
+
+# Custom output directory
+python3 batch_extract.py -i clips.txt -o my_videos
+
+# Dry run (preview without extracting)
+python3 batch_extract.py -i clips.txt --dry-run
+
+# Custom job name
+python3 batch_extract.py -i clips.txt --job-name "My Collection"
+
+# Export configuration template
+python3 batch_extract.py --export-template template.json
+```
+
+### Supported Input Formats
+
+**Natural Language Text:**
+
+```text
+# Comments are ignored
+https://www.youtube.com/watch?v=VIDEO_ID
+
+# Various time formats work
+1:30 to 2:45          # MM:SS format
+14:09 to 14:12        # MM:SS format
+1:23:45 to 1:25:30    # HH:MM:SS format
+30 to 60 seconds      # Seconds only
+from 1:30 to 2:00     # "from X to Y" format
+1:30 - 2:00           # Dash separator
+```
+
+**JSON Configuration:**
+
+```json
+{
+  "name": "My Clips Collection",
+  "output_directory": "extracted_clips",
+  "clips": [
+    {
+      "url": "https://www.youtube.com/watch?v=ABC123",
+      "start_time": "1:30",
+      "end_time": "2:45",
+      "output_filename": "clip1.mp4",
+      "description": "Funny moment"
+    }
+  ]
+}
+```
+
+**YAML Configuration:**
+
+```yaml
+name: "My Clips Collection"
+output_directory: "extracted_clips"
+clips:
+  - url: "https://www.youtube.com/watch?v=ABC123"
+    start_time: "1:30"
+    end_time: "2:45"
+    output_filename: "clip1.mp4"
+    description: "Funny moment"
+```
+
+### Programming Interface
+
+You can also use the batch processor programmatically:
+
+```python
+from utils.batch_processor import BatchProcessor, ClipRequest, BatchJob
+
+# Create processor
+processor = BatchProcessor(output_base_dir="my_clips")
+
+# Create clips programmatically
+clips = [
+    ClipRequest(
+        url="https://www.youtube.com/watch?v=ABC123",
+        start_time="1:30",
+        end_time="2:45",
+        output_filename="my_clip.mp4"
+    )
+]
+
+# Create and execute batch job
+batch_job = BatchJob(
+    name="My Job",
+    output_directory="clips",
+    clips=clips
+)
+
+results = processor.execute_batch_job(batch_job)
+```
+
+### Backward Compatibility
+
+Your existing scripts still work! The old `extract_additional_clips.py` now uses the new modular system internally while maintaining the same interface.
+
 ### Integration with Other Tools
 
 YouClip can be easily integrated into larger workflows:
@@ -342,21 +499,29 @@ This tool is for educational and personal use only. Users are responsible for co
 
 ```
 YouClip/
-├── youclip.py              # CLI application
-├── youclip_gui.py          # GUI application
-├── launch_gui.py           # GUI launcher with checks
-├── requirements.txt        # Python dependencies
-├── setup.py               # Automated setup script
-├── test_youclip.py        # Test suite
-├── README.md              # This file
+├── youclip.py                 # CLI application
+├── youclip_gui.py             # GUI application
+├── launch_gui.py              # GUI launcher with checks
+├── batch_extract.py           # Batch extraction system
+├── extract_additional_clips.py # Legacy batch script (now uses new system)
+├── extract_user_clips.py      # User clips batch script
+├── requirements.txt           # Python dependencies
+├── setup.py                  # Automated setup script
+├── test_youclip.py           # Test suite
+├── README.md                 # This file
+├── BATCH_EXTRACTION.md       # Detailed batch extraction docs
 ├── utils/
 │   ├── __init__.py
-│   ├── video_processor.py  # Core video processing
-│   ├── time_parser.py      # Time format handling
-│   └── validators.py       # Input validation
-└── examples/              # Usage examples
-    ├── batch_example.sh     # Batch processing script
-    └── python_integration.py # API integration examples
+│   ├── video_processor.py     # Core video processing
+│   ├── batch_processor.py     # Batch processing engine
+│   ├── time_parser.py         # Time format handling
+│   └── validators.py          # Input validation
+└── examples/                 # Usage examples
+    ├── batch_example.sh        # Batch processing script
+    ├── python_integration.py   # API integration examples
+    ├── clips_example.txt       # Natural language format
+    ├── clips_example.json      # JSON configuration
+    └── clips_example.yaml      # YAML configuration
 ```
 
 ## 🆕 Version History
